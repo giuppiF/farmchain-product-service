@@ -11,7 +11,20 @@ module.exports = (options) => {
     })
 
     router.post('/', async (req,res) => {
-        var product = await repo.createProduct(req.body).catch(err => {res.status(400).send(err)})
+        var productData = {
+            name: req.body.name,
+            description: req.body.description,
+            image: req.body.image,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            farm: req.body.farm,
+            status: 'In Progress',
+            category: req.body.category,
+            smartContract: req.body.smartContract,
+            steps: req.body.steps,
+            lots: req.body.lots,
+        }
+        var product = await repo.createProduct(productData).catch(err => {res.status(400).send(err)})
         res.status(status.OK).json(product)
     })
 
@@ -20,7 +33,23 @@ module.exports = (options) => {
         res.status(status.OK).json(product)
     })
     router.put('/:productID', async (req,res) => {
-        var product = await repo.updateProduct(req.params.productID,req.body).catch(err => {res.status(400).send(err)})
+        var productData = {
+            name: req.body.name,
+            description: req.body.description,
+            image: req.body.image,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            farm: req.body.farm,
+            status: 'In Progress',
+            category: req.body.category,
+            smartContract: req.body.smartContract,
+            steps: req.body.steps,
+            extras: req.body.extras,
+            dealers:req.body.dealers,
+            media: req.body.media,
+            lots: req.body.lots,
+        }
+        var product = await repo.updateProduct(req.params.productID,productData).catch(err => {res.status(400).send(err)})
         res.status(status.OK).json(product)
     })
     router.delete('/:productID', async (req,res) => {
