@@ -6,7 +6,7 @@ const dbSettings = {
 }
 
 const serverSettings = {
-    port: process.env.SERVER_PORT || 3000,
+    port: process.env.SERVER_PORT || 4000,
 }
 
   

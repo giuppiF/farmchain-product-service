@@ -26,8 +26,8 @@ const start  = (options) => {
             res.status(500).send('Something went wrong!')
         })
 
-        const farmApi = require('../api/farms')(options)
-        app.use('/farm',farmApi)
+        const productApi = require('../api/products')(options)
+        app.use('/product',productApi)
 
 
         const server = app.listen(options.port, () => resolve(server))

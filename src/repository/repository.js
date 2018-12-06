@@ -1,26 +1,26 @@
 'use strict'
-const Farm = require('../models/farm.model')
+const Product = require('../models/product.model')
 
 const repository = () => {
     
-  const getAllFarms = () => {
-    return new Promise(async (resolve, reject) => {
-      let farms = await Farm.find();
-      resolve(farms);
+  const getAllProducts = () => {
+    return new Promise((resolve, reject) => {
+      let products = Product.find();
+      resolve(products);
     })
   }
 
-  const getFarm = (id) => {
-    return new Promise(async (resolve,reject) =>{
-      let farm = await Farm.findById(id);
-      if(!farm) reject()
-      resolve(farm)
+  const getProduct = (id) => {
+    return new Promise((resolve,reject) =>{
+      let product = Product.findById(id);
+      if(!product) reject()
+      resolve(product)
     })
   }
-  const createFarm = (payload) => {
-    return new Promise(async (resolve, reject) => {
-      let farm = await new Farm(payload)
-      farm.save((err,data) => {
+  const createProduct = (payload) => {
+    return new Promise((resolve, reject) => {
+      let product = new Product(payload)
+      product.save((err,data) => {
         console.log(err)
         if(err) reject(err)
         resolve(data)
@@ -28,28 +28,28 @@ const repository = () => {
     })
   }
 
-  const updateFarm = (id, farmBody) => {
-    return new Promise(async (resolve,reject) =>{
-      let farm = await Farm.findByIdAndUpdate(id,farmBody,{new: true});
-      if(!farm) reject()
-      resolve(farm)
+  const updateProduct = (id, productBody) => {
+    return new Promise((resolve,reject) =>{
+      let product = Product.findByIdAndUpdate(id,productBody,{new: true});
+      if(!product) reject()
+      resolve(product)
     })
   }
 
-  const deleteFarm = (id) => {
-    return new Promise(async (resolve,reject) =>{
-      let farm = await Farm.findByIdAndRemove(id);
-      if(!farm) reject()
-      resolve(farm)
+  const deleteProduct = (id) => {
+    return new Promise((resolve,reject) =>{
+      let product = Product.findByIdAndRemove(id);
+      if(!product) reject()
+      resolve(product)
     })
   }
 
   return Object.create({
-    getAllFarms,
-    getFarm,
-    createFarm,
-    updateFarm,
-    deleteFarm
+    getAllProducts,
+    getProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct
   })
 }
 
