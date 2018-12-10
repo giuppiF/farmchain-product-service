@@ -139,7 +139,6 @@ module.exports = (options) => {
             name: req.body.name,
             description: req.body.description,
             image: req.body.image,
-            createdAt: Date.now(),
             updatedAt: Date.now(),
             farm: req.body.farm,
             status: req.body.status,
