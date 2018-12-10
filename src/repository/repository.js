@@ -1,47 +1,89 @@
 'use strict'
 const Product = require('../models/product.model')
+const ProductType = require('../models/productType.model')
 
 const repository = () => {
     
-  const getAllProducts = () => {
-    return new Promise((resolve, reject) => {
-      let products = Product.find();
-      resolve(products);
-    })
+  const getAllProducts = async () => {
+    try {
+      let products = await Product.find();
+      return products
+    } catch (error) {
+      throw Error(error);
+    }
   }
 
-  const getProduct = (id) => {
-    return new Promise((resolve,reject) =>{
-      let product = Product.findById(id);
-      if(!product) reject()
-      resolve(product)
-    })
-  }
-  const createProduct = (payload) => {
-    return new Promise((resolve, reject) => {
-      let product = new Product(payload)
-      product.save((err,data) => {
-        console.log(err)
-        if(err) reject(err)
-        resolve(data)
-      })
-    })
+  const getProduct = async (id) =>
+  {
+    try {
+      let product = await Product.findById(id)
+      return product
+    } catch (error){
+      throw Error(error);
+    }
   }
 
-  const updateProduct = (id, productBody) => {
-    return new Promise((resolve,reject) =>{
-      let product = Product.findByIdAndUpdate(id,productBody,{new: true});
-      if(!product) reject()
-      resolve(product)
-    })
+  const createProduct = async (payload) => {
+    try{
+      let product = await new Product(payload)
+      await product.save()   
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
   }
 
-  const deleteProduct = (id) => {
-    return new Promise((resolve,reject) =>{
-      let product = Product.findByIdAndRemove(id);
-      if(!product) reject()
-      resolve(product)
-    })
+  const updateProduct = async (id, productBody) => {
+    try{
+      let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const deleteProduct = async (id) => {
+    try{
+      let product = await Product.findByIdAndRemove(id)
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const getProductTypes = async () => {
+    try {
+      let productTypes = await ProductType.find();
+      return productTypes
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+  const createProductType = async (payload) => {
+    try{
+      let productType = await new ProductType(payload)
+      await productType.save()   
+      return productType
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+  const updateProductType = async (id, productTypeBody) => {
+    try{
+      let productType = await ProductType.findByIdAndUpdate(id,productTypeBody,{new: true,runValidators: true})
+      return productType
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+  
+  const deleteProductType = async (id) => {
+    try{
+      let productType = await ProductType.findByIdAndRemove(id)
+      return productType
+    } catch (error) {
+      throw Error(error)
+    }
   }
 
   return Object.create({
@@ -49,7 +91,11 @@ const repository = () => {
     getProduct,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductTypes,
+    createProductType,
+    updateProductType,
+    deleteProductType
   })
 }
 

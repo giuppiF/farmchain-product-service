@@ -43,7 +43,7 @@ var joiProductSchema = Joi.object({
     farm: Joi.string().required(),
     status: Joi.string().valid('In Progress','Completed'),
     category: Joi.string().valid('Frutta','Verdura').required(),
-    smartContract: Joi.string().required(),
+    smartContract: Joi.string(),
     steps: Joi.array().items(joiStepSchema),
     extras: Joi.array().items(joiExtraSchema),
     dealers: Joi.array().items(joiDealerSchema),

@@ -9,5 +9,15 @@ const serverSettings = {
     port: process.env.SERVER_PORT || 4000,
 }
 
+const farmServiceSettings = {
+    host: process.env.FARM_SERVER_HOST,
+    port: process.env.FARM_SERVER_PORT
+}
+
+//settings blockchain API
+const bcServiceSettings = {
+    host: process.env.BC_SERVER_HOST,
+    port: process.env.BC_SERVER_PORT
+}
   
-module.exports = Object.assign({}, { dbSettings, serverSettings })
+module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings})
