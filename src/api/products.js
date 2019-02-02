@@ -11,60 +11,6 @@ module.exports = (options) => {
         res.status(status.OK).json(products)
     })
 
-    router.get('/types', async (req,res) => {
-        var productTypes = await repo.getProductTypes();
-        res.status(status.OK).json(productTypes)
-    })
-
-    router.post('/types', async (req,res) => {
-        const productTypeData = {
-            name: req.body.name,
-            image: req.body.image,
-            category: req.body.category,
-            steps: req.body.steps,
-        }
-
-        try{
-            var productType = await repo.createProductType(productTypeData)
-            productType ?
-                res.status(status.OK).json(productType)
-            :
-                res.status(404).send()
-        } catch (err) {
-            res.status(400).send({'msg': err.message})
-        }
-    })
-
-    router.put('/types/:productTypeID', async (req,res) => {
-        const productTypeData = {
-            name: req.body.name,
-            image: req.body.image,
-            category: req.body.category,
-            steps: req.body.steps,
-        }
-
-        try{
-            var productType = await repo.updateProductType(req.params.productTypeID,productTypeData)
-            productType ?
-                res.status(status.OK).json(productType)
-            :
-                res.status(404).send()
-        } catch (err) {
-            res.status(400).send({'msg': err.message})
-        }
-    })
-    router.delete('/types/:productTypeID', async (req,res) => {
-        try{
-            var productType = await repo.deleteProductType(req.params.productTypeID)
-            productType ?
-                res.status(status.OK).json(productType)             
-            :
-                res.status(404).send()
-        } catch (err) {
-            res.status(400).send({'msg': err.message})
-        }
-    })
-
     router.post('/', async (req,res) => {
           
         var productData = {
@@ -97,19 +43,20 @@ module.exports = (options) => {
         }
 
         try{
-            var smartContract = await blockchainService.createProductSmartContract()
-            if(smartContract){
-                product.smartContract = smartContract;
-                product.save()
-            }
+            var farm = await farmService.addProductToFarm(product.farm,lightProductData)
+            if(farm)
+                res.status(status.OK).json(product._id)
             else
             {
                 res.status(404).send()
                 product.remove()
             }
-            var farm = await farmService.addProductToFarm(product.farm,lightProductData)
-            if(farm)
-                res.status(status.OK).json(product._id)
+
+            var smartContract = await blockchainService.createProductSmartContract()
+            if(smartContract){
+                product.smartContract = smartContract;
+                product.save()
+            }
             else
             {
                 res.status(404).send()
@@ -150,7 +97,6 @@ module.exports = (options) => {
             media: req.body.media,
             lots: req.body.lots,
         }
-
         var farmProductData= {
             _id: req.params.productID,
             name: req.body.name,
@@ -159,7 +105,6 @@ module.exports = (options) => {
             updatedAt: Date.now(),
             status: req.body.status,
         }
-
         try{
             var farm = await farmService.updateProductToFarm(req.body.farm,farmProductData)
             if(!farm){
@@ -194,7 +139,58 @@ module.exports = (options) => {
     })
 
 
-    
+    router.put('/:productID/lot', async (req,res) => {
+        if(req.body.constructor === Object && Object.keys(req.body).length === 0){
+            res.status(200).send({'msg': 'no lots'})
+
+        }else{
+            const lotsData = {
+                lots: req.body
+            }
+            
+            try{
+                var product = await repo.updateLots(req.params.productID,lotsData)
+                product ?
+                    res.status(status.OK).json(product)
+                :
+                    res.status(404).send()
+            } catch (err) {
+                res.status(400).send({'msg': err.message})
+            }
+        }
+
+    })
+
+    router.put('/:productID/lot/:lotID', async (req,res) => {
+
+        var lotData = {
+            _id: req.params.lotID,
+            name: req.body.name,
+            description: req.body.description,
+            image: req.body.image
+        }
+        try{
+            var product = await repo.updateLot(req.params.productID,lotData._id,lotData) 
+            product ?
+                res.status(status.OK).json(product)
+            :            
+                res.status(404).send()
+        } catch (err) {
+            res.status(400).send({'msg' : err.message})
+        }
+    })
+
+    router.delete('/:productID/lot/:lotID', async (req,res) => {
+        try{
+            var product = await repo.deleteLot(req.params.productID,req.params.lotID)
+            product ?
+                res.status(status.OK).json(product)
+            :            
+                res.status(404).send()
+        } catch (err) {
+            res.status(400).send({'msg' : err.message})
+        }
+    })
 
 
     return router;

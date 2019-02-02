@@ -11,6 +11,7 @@ var joiMediaSchema = Joi.object().keys({
 
 var joiStepSchema = Joi.object().keys({
     name: Joi.string(),
+    description: Joi.string(),
     icon: Joi.string(),
     status: Joi.string().valid('Current','Next','Completed'),
     order: Joi.number(),
@@ -25,8 +26,12 @@ var joiExtraSchema = Joi.object().keys({
 
 var joiDealerSchema = Joi.object().keys({
     name: Joi.string(),
-    description: Joi.string(),
-})
+    address: Joi.string(),
+    phone: Joi.string(),
+    mail: Joi.string(),
+    image:  Joi.string(),
+});
+
 
 const joiLotSchema = Joi.object().keys({
     name: Joi.string(),

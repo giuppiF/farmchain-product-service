@@ -14,10 +14,14 @@ const farmServiceSettings = {
     port: process.env.FARM_SERVER_PORT
 }
 
+const uploadServiceSettings = {
+    path: process.env.STORAGE_PATH
+}
+
 //settings blockchain API
 const bcServiceSettings = {
     host: process.env.BC_SERVER_HOST,
     port: process.env.BC_SERVER_PORT
 }
   
-module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings})
+module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings})

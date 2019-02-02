@@ -27,7 +27,15 @@ const start  = (options) => {
         })
 
         const productApi = require('../api/products')(options)
+        const productTypesApi = require('../api/types')(options)
+        const productLotApi = require('../api/lots')(options)
+        const productDealersApi = require('../api/dealers')(options)
+        const productStepsApi = require('../api/steps')(options)
         app.use('/product',productApi)
+        app.use('/product',productLotApi)
+        app.use('/product',productDealersApi)
+        app.use('/product/types',productTypesApi)
+        app.use('/product/',productStepsApi)
 
 
         const server = app.listen(options.port, () => resolve(server))

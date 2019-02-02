@@ -19,11 +19,16 @@ mediator.on('db.ready', async (db) => {
         port: config.bcServiceSettings.port
     })
 
+    var storageService = await services.storageService.start({
+        path: config.uploadServiceSettings.path
+    })
+
     var app = await server.start({
         port:  config.serverSettings.port,
         repo: repo,
         farmService:  farmService,
-        blockchainService: blockhainService
+        blockchainService: blockhainService,
+        storageService: storageService
     })
 
     app.on('close', () => {

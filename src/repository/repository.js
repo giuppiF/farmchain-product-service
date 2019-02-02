@@ -51,6 +51,77 @@ const repository = () => {
     }
   }
 
+  const updateLots = async (id, productBody) => {
+    try{
+      console.log(productBody)
+      let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const updateLot= async (productId, lotId, lotData) => {
+    try {
+      let product = await Product.findOneAndUpdate(
+        {_id: productId, "lots._id" : lotId}, 
+        { "lots.$" : lotData }, 
+        { new: true,runValidators: true })
+
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
+  const deleteLot = async (productId, lotId) => {
+    try{
+      let product = await Product.findOneAndUpdate(
+        {_id: productId, "lots._id" : lotId},
+        {$pull: {lots: {_id: lotId }}},
+        { new: true,runValidators: true })
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
+  const updateDealers = async (id, productBody) => {
+    try{
+      console.log(productBody)
+      let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const updateDealer= async (productId, dealerId, dealerData) => {
+    try {
+      console.log(productId)
+      let product = await Product.findOneAndUpdate(
+        {_id: productId, "dealers._id" : dealerId}, 
+        { "dealers.$" : dealerData }, 
+        { new: true,runValidators: true })
+
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
+  const deleteDealer = async (productId, dealerId) => {
+    try{
+      let product = await Product.findOneAndUpdate(
+        {_id: productId, "dealers._id" : dealerId},
+        {$pull: {dealers: {_id: dealerId }}},
+        { new: true,runValidators: true })
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
   const getProductTypes = async () => {
     try {
       let productTypes = await ProductType.find();
@@ -92,6 +163,12 @@ const repository = () => {
     createProduct,
     updateProduct,
     deleteProduct,
+    updateLots,
+    updateLot,
+    deleteLot,
+    updateDealers,
+    updateDealer,
+    deleteDealer,
     getProductTypes,
     createProductType,
     updateProductType,
