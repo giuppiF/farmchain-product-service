@@ -16,7 +16,6 @@ module.exports = (options) => {
         var productData = {
             name: req.body.name,
             description: req.body.description,
-            image: req.body.image,
             createdAt: Date.now(),
             updatedAt: Date.now(),
             farm: req.body.farm,
@@ -28,6 +27,17 @@ module.exports = (options) => {
 
         try{
             var product = await repo.createProduct(productData)
+            if(req.body.image){
+                var image = req.body.image
+    
+                var filename = Date.now()+ '-' + image
+                var pathname = path.join( req.originalUrl, product._id.toString())
+                var completePath = path.join(storagePath,pathname)
+                var templateFile =  path.join(storagePath,'product','type',image)
+                var uploadfile = await storageService.copyTemplateFile(templateFile, filename, completePath )
+                product.image = path.join(pathname, filename)
+                product.save()
+            }
         } catch (err) {
             res.status(400).send({'msg': err.message})
             return

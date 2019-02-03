@@ -34,6 +34,25 @@ const storageService = (options) => {
     }
   }
 
+  const copyTemplateFile =  async (rawfile, filename, pathname) => {
+
+    try{
+      if (!fs.existsSync(pathname)) {
+        await mkdirp.sync(pathname)
+      }
+
+      var newfile = path.join(pathname,filename)
+      
+      await copyFile(rawfile,newfile )
+      
+      return newfile
+
+    } catch (err) {
+      throw  Error(err)
+    }
+  }
+
+
   const deleteDir =  async (pathname) => {
 
     try{
@@ -50,6 +69,7 @@ const storageService = (options) => {
   return Object.create({
 	saveToDir,
   deleteFile,
+  copyTemplateFile,
   deleteDir
   })
 }
@@ -57,6 +77,16 @@ const storageService = (options) => {
 function moveFile(imagePath,saveTo) {
   return new Promise(function (resolve, reject) {
       fs.rename(imagePath, saveTo, async  (err)=>{
+          if(err) reject(err)
+          else
+          resolve()
+      })
+  });
+}
+
+function copyFile(originalFile,newFile) {
+  return new Promise(function (resolve, reject) {
+    fs.copyFile(originalFile, newFile,  async  (err)=>{
           if(err) reject(err)
           else
           resolve()
