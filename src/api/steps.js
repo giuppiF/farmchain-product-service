@@ -7,6 +7,28 @@ module.exports = (options) => {
     const {repo} = options
     
 
+
+    router.post('/:productID/step/', async (req,res) => {
+        try{
+            var stepData = {
+                name: req.body.name,
+                description: req.body.description,
+                icon: req.body.icon,
+                status:req.body.status,
+                order: req.body.order
+            }
+            var step = await repo.addStep(req.params.productID,stepData)
+
+            res.status(status.OK).json(step)
+
+        }catch (err) {
+            res.status(400).json({msg: err.message})
+        }
+
+    })
+
+
+
     router.put('/:productID/step', async (req,res) => {
         if(req.body.constructor === Object && Object.keys(req.body).length === 0){
             res.status(200).send({'msg': 'no steps'})

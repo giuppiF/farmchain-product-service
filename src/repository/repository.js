@@ -1,6 +1,7 @@
 'use strict'
 const Product = require('../models/product.model')
 const ProductType = require('../models/productType.model')
+const Media = require('../models/media.model')
 
 const repository = () => {
     
@@ -88,7 +89,6 @@ const repository = () => {
 
   const updateDealers = async (id, productBody) => {
     try{
-      console.log(productBody)
       let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
       return product
     } catch (error) {
@@ -98,7 +98,6 @@ const repository = () => {
 
   const updateDealer= async (productId, dealerId, dealerData) => {
     try {
-      console.log(productId)
       let product = await Product.findOneAndUpdate(
         {_id: productId, "dealers._id" : dealerId}, 
         { "dealers.$" : dealerData }, 
@@ -157,6 +156,93 @@ const repository = () => {
     }
   }
 
+  const createMedia = async (payload) => {
+    try{
+      let media = await new Media(payload)
+      await media.save()   
+      return media
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+    
+  const updateMedia = async (id, mediaBody) => {
+    try{
+      let media = await Media.findByIdAndUpdate(id,mediaBody,{new: true,runValidators: true})
+      return media
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const addMediasToProduct = async (productId, medias) => {
+    try{
+      let product = Product.findByIdAndUpdate(
+         productId ,
+        { $addToSet: { media: { $each: medias } } },
+        {new: true,runValidators: true}
+      );
+      
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const updateProductMedia = async (productId, productBody) => {
+    try{
+      let product = await Product.findByIdAndUpdate(productId,productBody,{new: true,runValidators: true})
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const addStep = async (prodcutId, step) => {
+    try{
+      let product = await Product.findByIdAndUpdate(prodcutId,{ $push: { steps: step }},{new: true,runValidators: true})
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const updateSteps = async (id, productBody) => {
+    try{
+      let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const updateStep= async (productId, stepId, stepData) => {
+    try {
+      let product = await Product.findOneAndUpdate(
+        {_id: productId, "steps._id" : stepId}, 
+        { "steps.$" : stepData }, 
+        { new: true,runValidators: true })
+
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
+  const deleteStep = async (productId, stepId) => {
+    try{
+      let product = await Product.findOneAndUpdate(
+        {_id: productId, "steps._id" : stepId},
+        {$pull: {steps: {_id: stepId }}},
+        { new: true,runValidators: true })
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
+
+
   return Object.create({
     getAllProducts,
     getProduct,
@@ -172,7 +258,15 @@ const repository = () => {
     getProductTypes,
     createProductType,
     updateProductType,
-    deleteProductType
+    deleteProductType,
+    createMedia,
+    updateMedia,
+    addMediasToProduct,
+    updateProductMedia,
+    addStep,
+    updateStep,
+    updateSteps,
+    deleteStep
   })
 }
 

@@ -12,16 +12,30 @@ const blockchainService = (options) => {
                 }
               }
             var response = await axios.post(url,product,config)*/
-            return "smartContractAddress";
+            return "0X000000000000";
         } catch (err){
             throw  Error(err)
         }
     }
 
-
+    const createMediaSmartContract = async () => {
+        try{
+            /*const url = `http://${options.host}:${options.port}/farm/${farmId}/product`
+            let config = {
+                headers: {
+                  "Content-Type" : "application/json",
+                }
+              }
+            var response = await axios.post(url,product,config)*/
+            return "1X11111111111111111";
+        } catch (err){
+            throw  Error(err)
+        }
+    }
 
 return Object.create({
-    createProductSmartContract
+    createProductSmartContract,
+    createMediaSmartContract
 })
 }
 

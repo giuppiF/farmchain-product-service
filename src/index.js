@@ -28,7 +28,9 @@ mediator.on('db.ready', async (db) => {
         repo: repo,
         farmService:  farmService,
         blockchainService: blockhainService,
-        storageService: storageService
+        storagePath: config.uploadServiceSettings.path,
+        storageService: storageService,
+
     })
 
     app.on('close', () => {

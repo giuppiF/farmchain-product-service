@@ -1,10 +1,10 @@
 'use strict'
 const status = require('http-status')
 const router = require('express').Router();
-
+const path = require('path')
 
 module.exports = (options) => {
-    const {repo, farmService, blockchainService} = options
+    const {repo, farmService, blockchainService, storageService, storagePath} = options
     
     router.get('/', async (req,res) => {
         var products = await repo.getAllProducts();
@@ -83,6 +83,7 @@ module.exports = (options) => {
 
     router.put('/:productID', async (req,res) => {
         var productData = {
+            _id: req.params.productID,
             name: req.body.name,
             description: req.body.description,
             image: req.body.image,
@@ -91,11 +92,6 @@ module.exports = (options) => {
             status: req.body.status,
             category: req.body.category,
             smartContract: req.body.smartContract,
-            steps: req.body.steps,
-            extras: req.body.extras,
-            dealers:req.body.dealers,
-            media: req.body.media,
-            lots: req.body.lots,
         }
         var farmProductData= {
             _id: req.params.productID,
@@ -106,6 +102,28 @@ module.exports = (options) => {
             status: req.body.status,
         }
         try{
+
+            if(req.files.image){
+                
+                var pathname = req.originalUrl
+                var completePathname = path.join(storagePath, pathname)
+                var product = await repo.getProduct(req.params.productID)
+                if(product.image)
+                    var deleteFile = await storageService.deleteFile(product.image,storagePath)            
+
+                var image = req.files.image    
+                var filename = Date.now()+ '-' + image.originalFilename
+                
+                var uploadfile = await storageService.saveToDir(image.path, filename, completePathname )
+                productData.image = path.join(pathname,filename)
+                farmProductData.image=  path.join(pathname,filename)
+
+            }else{
+                productData.image=req.body.image
+                farmProductData.image=req.body.image
+            }
+
+
             var farm = await farmService.updateProductToFarm(req.body.farm,farmProductData)
             if(!farm){
                 res.status(404).send()
@@ -139,17 +157,19 @@ module.exports = (options) => {
     })
 
 
-    router.put('/:productID/lot', async (req,res) => {
+
+
+    router.put('/:productID/media', async (req,res) => {
         if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-            res.status(200).send({'msg': 'no lots'})
+            res.status(200).send({'msg': 'no medias'})
 
         }else{
-            const lotsData = {
-                lots: req.body
+            const mediaData = {
+                media: req.body
             }
             
             try{
-                var product = await repo.updateLots(req.params.productID,lotsData)
+                var product = await repo.updateProductMedia(req.params.productID,mediaData)
                 product ?
                     res.status(status.OK).json(product)
                 :
@@ -161,36 +181,6 @@ module.exports = (options) => {
 
     })
 
-    router.put('/:productID/lot/:lotID', async (req,res) => {
-
-        var lotData = {
-            _id: req.params.lotID,
-            name: req.body.name,
-            description: req.body.description,
-            image: req.body.image
-        }
-        try{
-            var product = await repo.updateLot(req.params.productID,lotData._id,lotData) 
-            product ?
-                res.status(status.OK).json(product)
-            :            
-                res.status(404).send()
-        } catch (err) {
-            res.status(400).send({'msg' : err.message})
-        }
-    })
-
-    router.delete('/:productID/lot/:lotID', async (req,res) => {
-        try{
-            var product = await repo.deleteLot(req.params.productID,req.params.lotID)
-            product ?
-                res.status(status.OK).json(product)
-            :            
-                res.status(404).send()
-        } catch (err) {
-            res.status(400).send({'msg' : err.message})
-        }
-    })
 
 
     return router;
