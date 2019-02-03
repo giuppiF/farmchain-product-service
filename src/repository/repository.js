@@ -129,6 +129,16 @@ const repository = () => {
       throw Error(error);
     }
   }
+
+  const getProductType = async (id) => {
+    try {
+      let productType = await ProductType.findById(id);
+      return productType
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+
   const createProductType = async (payload) => {
     try{
       let productType = await new ProductType(payload)
@@ -256,6 +266,7 @@ const repository = () => {
     updateDealer,
     deleteDealer,
     getProductTypes,
+    getProductType,
     createProductType,
     updateProductType,
     deleteProductType,

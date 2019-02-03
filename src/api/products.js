@@ -33,7 +33,7 @@ module.exports = (options) => {
                 var filename = Date.now()+ '-' + image
                 var pathname = path.join( req.originalUrl, product._id.toString())
                 var completePath = path.join(storagePath,pathname)
-                var templateFile =  path.join(storagePath,'product','type',image)
+                var templateFile =  path.join(storagePath,'product','types',image)
                 var uploadfile = await storageService.copyTemplateFile(templateFile, filename, completePath )
                 product.image = path.join(pathname, filename)
                 product.save()
