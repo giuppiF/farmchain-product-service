@@ -29,7 +29,7 @@ module.exports = (options) => {
                 var image = req.files.image
     
                 var filename = Date.now()+ '-' + image.originalFilename
-                var pathname = path.join(req.originalUrl, productType._id.toString())
+                var pathname = req.originalUrl
                 var completePath = path.join(storagePath,pathname)
                 var uploadfile = await storageService.saveToDir(image.path, filename, completePath )
                 productType.image = filename
@@ -57,7 +57,7 @@ module.exports = (options) => {
         try{
             if(req.files.image){
                 
-                var pathname = req.originalUrl
+                var pathname = path.join('product','types')
                 var completePathname = path.join(storagePath, pathname)
                 var productType = await repo.getProductType(req.params.productTypeID)
                 if(productType.image){
