@@ -55,7 +55,7 @@ module.exports = (options) => {
         try{
             var farm = await farmService.addProductToFarm(product.farm,lightProductData)
             if(farm)
-                res.status(status.OK).json(product._id)
+                res.status(status.OK).json(product)
             else
             {
                 res.status(404).send()
