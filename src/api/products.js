@@ -29,11 +29,11 @@ module.exports = (options) => {
             var product = await repo.createProduct(productData)
             if(req.body.image){
                 var image = req.body.image
-    
-                var filename = Date.now()+ '-' + image
+                var parts = image.split('/');
+                var filename = Date.now()+ '-' +parts[parts.length - 1]
                 var pathname = path.join( req.originalUrl, product._id.toString())
                 var completePath = path.join(storagePath,pathname)
-                var templateFile =  path.join(storagePath,'product','types',image)
+                var templateFile =  path.join(storagePath,image)
                 var uploadfile = await storageService.copyTemplateFile(templateFile, filename, completePath )
                 product.image = path.join(pathname, filename)
                 product.save()

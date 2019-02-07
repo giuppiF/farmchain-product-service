@@ -32,7 +32,7 @@ module.exports = (options) => {
                 var pathname = req.originalUrl
                 var completePath = path.join(storagePath,pathname)
                 var uploadfile = await storageService.saveToDir(image.path, filename, completePath )
-                productType.image = filename
+                productType.image = path.join(pathname,filename)
                 productType.save()
 
             }
@@ -69,7 +69,7 @@ module.exports = (options) => {
                 var filename = Date.now()+ '-' + image.originalFilename
                 
                 var uploadfile = await storageService.saveToDir(image.path, filename, completePathname )
-                productTypeData.image = filename
+                productTypeData.image = path.join(pathname,filename)
 
                 
 
