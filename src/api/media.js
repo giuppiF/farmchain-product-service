@@ -22,13 +22,13 @@ module.exports = (options) => {
                 products.push(req.body.products)
             else    
                 products =req.body.products
-    
+            var geolocal = JSON.parse(req.body.geolocal)
             var loadMedia = mediaFiles.map( async (mediaFile)=> {
                 const mediaData = {
-                    timestamp: req.body.geolocal.timestamp,
+                    timestamp: geolocal.timestamp,
                     location: {
-                        longitude: req.body.geolocal.coords.longitude,
-                        latitude: req.body.geolocal.coords.latitude
+                        longitude: geolocal.coords.longitude,
+                        latitude: geolocal.coords.latitude
                     }
                 }
     
