@@ -25,8 +25,11 @@ module.exports = (options) => {
     
             var loadMedia = mediaFiles.map( async (mediaFile)=> {
                 const mediaData = {
-                    date: req.body.date,
-                    location: req.body.location
+                    timestamp: req.body.geolocal.timestamp,
+                    location: {
+                        longitude: req.body.geolocal.coords.longitude,
+                        latitude: req.body.geolocal.coords.latitude
+                    }
                 }
     
                 var media = await repo.createMedia(mediaData)
