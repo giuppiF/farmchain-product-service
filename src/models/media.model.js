@@ -5,7 +5,7 @@ const Joi = require('joi');
 var joiMediaSchema = Joi.object().keys({
     src: Joi.string(),
     smartContract: Joi.string(),
-    timestamp: Joi.date().timestamp(),
+    timestamp: Joi.number(),
     location: Joi.object().keys({
         longitude: Joi.number(),
         latitude: Joi.number()
