@@ -13,8 +13,8 @@ var joiMediaSchema = Joi.object().keys({
 })
 
 var joiStepSchema = Joi.object().keys({
-    name: Joi.string().required(),
-    description: Joi.string().required(),
+    name: Joi.string(),
+    description: Joi.string(),
     icon: Joi.string(),
     status: Joi.string().valid('Current','Next','Completed'),
     order: Joi.number(),
