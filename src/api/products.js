@@ -155,7 +155,7 @@ module.exports = (options) => {
                 res.status(404).send()
                 return
             }
-            var farm = await farmService.deleteProductToFarm(product.farm.id,product._id)
+            var farm = await farmService.deleteProductToFarm(product.farm._id,product._id)
             farm ?
                 res.status(status.OK).json(product)             
             :
