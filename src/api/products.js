@@ -53,7 +53,7 @@ module.exports = (options) => {
         }
 
         try{
-            var farm = await farmService.addProductToFarm(product.farm.id,lightProductData)
+            var farm = await farmService.addProductToFarm(product.farm._id,lightProductData)
             if(farm)
                 res.status(status.OK).json(product)
             else
@@ -132,7 +132,7 @@ module.exports = (options) => {
             var product = await repo.updateProduct(req.params.productID,productData)
             
             farmProductData.status = product.status
-            var farm = await farmService.updateProductToFarm(product.farm.id,farmProductData)
+            var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData)
             if(!farm){
                 res.status(404).send()
                 return;
