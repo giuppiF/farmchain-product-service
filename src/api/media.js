@@ -37,6 +37,7 @@ module.exports = (options) => {
                 try{
                     
                     var filename = Date.now()+ '-' + mediaFile.originalFilename
+                    filename = filename.replace('mp4','MP4')
                     var pathname = path.join(req.originalUrl, media._id.toString())
                     var completePath = path.join(storagePath,pathname)
                     var uploadfile = await storageService.saveToDir(mediaFile.path, filename, completePath )

@@ -53,7 +53,7 @@ module.exports = (options) => {
         }
 
         try{
-            var farm = await farmService.addProductToFarm(product.farm,lightProductData)
+            var farm = await farmService.addProductToFarm(product.farm.id,lightProductData)
             if(farm)
                 res.status(status.OK).json(product)
             else
@@ -98,18 +98,13 @@ module.exports = (options) => {
             description: req.body.description,
             image: req.body.image,
             updatedAt: Date.now(),
-            farm: req.body.farm,
-            status: req.body.status,
-            category: req.body.category,
-            smartContract: req.body.smartContract,
+            expiration: req.body.expiration
         }
         var farmProductData= {
             _id: req.params.productID,
             name: req.body.name,
             image: req.body.image,
-            category: req.body.category,
-            updatedAt: Date.now(),
-            status: req.body.status,
+            updatedAt: Date.now()
         }
         try{
 
@@ -134,12 +129,15 @@ module.exports = (options) => {
             }
 
 
-            var farm = await farmService.updateProductToFarm(req.body.farm,farmProductData)
+            var product = await repo.updateProduct(req.params.productID,productData)
+            
+            farmProductData.status = product.status
+            var farm = await farmService.updateProductToFarm(product.farm.id,farmProductData)
             if(!farm){
                 res.status(404).send()
                 return;
             }
-            var product = await repo.updateProduct(req.params.productID,productData)
+
             product ?
                 res.status(status.OK).json(product)
             :
@@ -156,7 +154,7 @@ module.exports = (options) => {
                 res.status(404).send()
                 return
             }
-            var farm = await farmService.deleteProductToFarm(product.farm,product._id)
+            var farm = await farmService.deleteProductToFarm(product.farm.id,product._id)
             farm ?
                 res.status(status.OK).json(product)             
             :
@@ -191,6 +189,26 @@ module.exports = (options) => {
 
     })
 
+    router.put('/:productID/farm', async (req,res) => {
+        var productFarmData = {
+            farm: req.body
+        }
+
+        try{
+            var product = await repo.updateFarm(req.params.productID,productFarmData)
+            product ?
+                res.status(status.OK).json(product)
+            :
+                res.status(404).send()
+        } catch (err) {
+            res.status(400).send({'msg': err.message})
+        }
+
+
+
+
+
+    })
 
 
     return router;

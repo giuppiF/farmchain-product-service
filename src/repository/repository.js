@@ -54,7 +54,6 @@ const repository = () => {
 
   const updateLots = async (id, productBody) => {
     try{
-      console.log(productBody)
       let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
       return product
     } catch (error) {
@@ -251,6 +250,16 @@ const repository = () => {
     }
   }
 
+  const updateFarm = async (id, productBody) => {
+    try{
+      let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+
 
 
   return Object.create({
@@ -277,7 +286,8 @@ const repository = () => {
     addStep,
     updateStep,
     updateSteps,
-    deleteStep
+    deleteStep,
+    updateFarm
   })
 }
 

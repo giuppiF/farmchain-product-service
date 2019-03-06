@@ -13,8 +13,8 @@ var joiMediaSchema = Joi.object().keys({
 })
 
 var joiStepSchema = Joi.object().keys({
-    name: Joi.string(),
-    description: Joi.string(),
+    name: Joi.string().required(),
+    description: Joi.string().required(),
     icon: Joi.string(),
     status: Joi.string().valid('Current','Next','Completed'),
     order: Joi.number(),
@@ -28,11 +28,12 @@ var joiExtraSchema = Joi.object().keys({
 })
 
 var joiDealerSchema = Joi.object().keys({
-    name: Joi.string(),
+    name: Joi.string().required(),
     address: Joi.string(),
     phone: Joi.string(),
     mail: Joi.string(),
-    image:  Joi.string(),
+    site: Joi.string(),
+    image:  Joi.string().required(),
 });
 
 
@@ -42,13 +43,24 @@ const joiLotSchema = Joi.object().keys({
     description: Joi.string(),
 })
 
+
 var joiProductSchema = Joi.object({
     name: Joi.string().required(),
     description: Joi.string(),
     image: Joi.string(),
     createdAt: Joi.date(),
     updatedAt: Joi.date(),
-    farm: Joi.string().required(),
+    farm: Joi.object().keys({
+        _id: Joi.string(),
+        name: Joi.string().required(),
+        address: Joi.string().required(),
+        mail: Joi.string().email().required(),
+        phone: Joi.string().required(),
+        logo: Joi.string(),
+        websiteURL: Joi.string(),
+        description: Joi.string(),
+    }),
+    expiration: Joi.string(),
     status: Joi.string().valid('In Progress','Completed'),
     category: Joi.string().valid('Frutta','Verdura').required(),
     smartContract: Joi.string(),
