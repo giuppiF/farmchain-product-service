@@ -132,6 +132,7 @@ module.exports = (options) => {
             var product = await repo.updateProduct(req.params.productID,productData)
             
             farmProductData.status = product.status
+            farmProductData.category = product.category
             var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData)
             if(!farm){
                 res.status(404).send()
