@@ -83,7 +83,7 @@ module.exports = (options) => {
         var currentFound = false
         try{
             
-            var product = await repo.updateStep(req.params.productID,req.params.stepID,stepData)
+            var product = await repo.closeStep(req.params.productID,req.params.stepID,stepData)
             var checkSteps = await product.steps.map(
                 async (step) => {
                     if(!currentFound && step.status == constants.step.status.next){

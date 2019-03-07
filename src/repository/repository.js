@@ -238,6 +238,19 @@ const repository = () => {
     }
   }
 
+  const closeStep = async (productId, stepId, stepData) => {
+    try {
+      let product = await Product.findOneAndUpdate(
+        {_id: productId, "steps._id" : stepId}, 
+        { "steps.$.status" : stepData.status }, 
+        { new: true,runValidators: true })
+
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
   const deleteStep = async (productId, stepId) => {
     try{
       let product = await Product.findOneAndUpdate(
@@ -286,6 +299,7 @@ const repository = () => {
     addStep,
     updateStep,
     updateSteps,
+    closeStep,
     deleteStep,
     updateFarm
   })
