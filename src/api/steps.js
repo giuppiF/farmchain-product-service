@@ -84,31 +84,26 @@ module.exports = (options) => {
         try{
             
             var product = await repo.updateStatusStep(req.params.productID,req.params.stepID,stepData)
-            var checkSteps = await product.steps.map(
-                async (step) => {
-                    console.log('step')
-                    console.log(step)
-                    if(!currentFound && step.status == constants.step.status.next){
-                        console.log('status' + step.status)
-                        step.status = constants.step.status.current
-                        var productUpdated = await repo.updateStatusStep(req.params.productID,step._id,{status: constants.step.status.current})
-                        currentFound = true
-                    }
-                    if(step.status !== constants.step.status.completed)
-                        productCompleted = false
+            for (let i = 0; i < product.steps.length; i++) {
+                if(!currentFound && product.steps[i].status == constants.step.status.next){
+                    product.steps[i].status = constants.step.status.current
+                    var productUpdated = await repo.updateStatusStep(req.params.productID,product.steps[i]._id,{status: constants.step.status.current})
+                    currentFound = true
                 }
-            )
-            await Promise.all(checkSteps).then(async () => {
-                if(productCompleted){
-                    product.status = constants.product.status.completed
-                    await product.save()
-                }
+                if(product.steps[i].status !== constants.step.status.completed)
+                    productCompleted = false
+            }
 
-                product ?
-                    res.status(status.OK).json(product)
-                :            
-                    res.status(404).send()
-            })
+            if(productCompleted){
+                product.status = constants.product.status.completed
+                await product.save()
+            }
+
+            product ?
+                res.status(status.OK).json(product)
+            :            
+                res.status(404).send()
+
             
         } catch (err) {
             res.status(400).send({'msg' : err.message})
