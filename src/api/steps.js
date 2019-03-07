@@ -86,7 +86,10 @@ module.exports = (options) => {
             var product = await repo.closeStep(req.params.productID,req.params.stepID,stepData)
             var checkSteps = await product.steps.map(
                 async (step) => {
+                    console.log('step')
+                    console.log(step)
                     if(!currentFound && step.status == constants.step.status.next){
+                        console.log('status' + step.status)
                         step.status = constants.step.status.current
                         currentFound = true
                     }
@@ -94,7 +97,7 @@ module.exports = (options) => {
                         productCompleted = false
                 }
             )
-            Promise.all(checkSteps).then(async () => {
+            await Promise.all(checkSteps).then(async () => {
                 if(productCompleted){
                     product.status = constants.product.status.completed
                     await product.save()
