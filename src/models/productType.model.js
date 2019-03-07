@@ -6,6 +6,7 @@ const Joi = require('joi');
 var joiStepSchema = Joi.object().keys({
     name: Joi.string(),
     icon: Joi.string(),
+    description: Joi.string().allow(''),
     status: Joi.string().valid('Current','Next','Completed'),
     order: Joi.number()
 })
