@@ -238,7 +238,7 @@ const repository = () => {
     }
   }
 
-  const closeStep = async (productId, stepId, stepData) => {
+  const updateStatusStep = async (productId, stepId, stepData) => {
     try {
       let product = await Product.findOneAndUpdate(
         {_id: productId, "steps._id" : stepId}, 
@@ -299,7 +299,7 @@ const repository = () => {
     addStep,
     updateStep,
     updateSteps,
-    closeStep,
+    updateStatusStep,
     deleteStep,
     updateFarm
   })
