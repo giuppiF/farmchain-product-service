@@ -10,7 +10,7 @@ var joiMediaSchema = Joi.object().keys({
         longitude: Joi.number(),
         latitude: Joi.number()
     })
-})
+}) 
 
 var joiStepSchema = Joi.object().keys({
     name: Joi.string(),
