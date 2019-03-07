@@ -23,5 +23,21 @@ const bcServiceSettings = {
     host: process.env.BC_SERVER_HOST,
     port: process.env.BC_SERVER_PORT
 }
+
+const constants = {
+    step: {
+        status: {
+            current: "Current",
+            next: "Next",
+            completed: "Completed"
+        }
+    },
+    product: {
+        status: {
+            inprog: "In Progress",
+            completed: "Completed"
+        }
+    }
+}
   
-module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings})
+module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants})

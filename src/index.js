@@ -30,6 +30,7 @@ mediator.on('db.ready', async (db) => {
         blockchainService: blockhainService,
         storagePath: config.uploadServiceSettings.path,
         storageService: storageService,
+        constants: config.constants
 
     })
 
