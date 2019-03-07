@@ -14,7 +14,7 @@ var joiMediaSchema = Joi.object().keys({
 
 var joiStepSchema = Joi.object().keys({
     name: Joi.string(),
-    description: Joi.string(),
+    description: Joi.string().allow(''),
     icon: Joi.string(),
     status: Joi.string().valid('Current','Next','Completed'),
     order: Joi.number(),
