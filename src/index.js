@@ -13,7 +13,7 @@ mediator.on('db.ready', async (db) => {
         host: config.farmServiceSettings.host,
         port: config.farmServiceSettings.port
     })
-
+ 
     var blockhainService = await services.blockchainService.start({
         host: config.bcServiceSettings.host,
         port: config.bcServiceSettings.port
