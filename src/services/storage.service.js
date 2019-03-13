@@ -3,6 +3,7 @@ const fs = require('fs')
 var mkdirp = require('mkdirp');
 var path = require('path');
 
+
 const storageService = (options) => {
 
   const saveToDir =  async (rawfile, filename, pathname) => {
@@ -51,8 +52,28 @@ const storageService = (options) => {
       throw  Error(err)
     }
   }
+  const saveBase64ToDir =  async (base64file, filename, pathname) => {
 
+    try{
+      var newfile = path.join(pathname,filename)
+      if (!fs.existsSync(pathname)) {
+        await mkdirp.sync(pathname)
+      }
+      fs.writeFileSync(newfile, base64file, {encoding: 'base64'}, function(err) {
+        console.log('File created');
+    });
+            
+      return newfile
 
+    } catch (err) {
+      throw  Error(err)
+    }
+  }
+  const fileToBase64 =  async (filename) => {
+    const file_buffer  = fs.readFileSync(filename);
+
+    return file_buffer.toString('base64');
+  }
   const deleteDir =  async (pathname) => {
 
     try{
@@ -70,6 +91,8 @@ const storageService = (options) => {
 	saveToDir,
   deleteFile,
   copyTemplateFile,
+  saveBase64ToDir,
+  fileToBase64,
   deleteDir
   })
 }

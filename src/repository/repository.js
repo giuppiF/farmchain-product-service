@@ -207,14 +207,24 @@ const repository = () => {
     }
   }
 
-  const addStep = async (prodcutId, step) => {
+  const addStep = async (productId, step) => {
     try{
-      let product = await Product.findByIdAndUpdate(prodcutId,{ $push: { steps: step }},{new: true,runValidators: true})
+      let product = await Product.findByIdAndUpdate(productId,{ $push: { steps: step }},{new: true,runValidators: true})
       return product
     } catch (error) {
       throw Error(error)
     }
   }
+  const getStep = async (productId,stepId) =>
+  {
+    try {
+      let product = await Product.findById(productId)
+      return product.steps.id(stepId)
+    } catch (error){
+      throw Error(error);
+    }
+  }
+
 
   const updateSteps = async (id, productBody) => {
     try{
@@ -297,6 +307,7 @@ const repository = () => {
     addMediasToProduct,
     updateProductMedia,
     addStep,
+    getStep,
     updateStep,
     updateSteps,
     updateStatusStep,

@@ -17,6 +17,8 @@ module.exports = (options) => {
                 status:req.body.status,
                 order: req.body.order
             }
+
+
             var step = await repo.addStep(req.params.productID,stepData)
 
             res.status(status.OK).json(step)
@@ -79,7 +81,7 @@ module.exports = (options) => {
             status: constants.step.status.completed
         }
 
-        var productCompleted = true
+ 
         var currentFound = false
         try{
             
@@ -90,14 +92,9 @@ module.exports = (options) => {
                     var productUpdated = await repo.updateStatusStep(req.params.productID,product.steps[i]._id,{status: constants.step.status.current})
                     currentFound = true
                 }
-                if(product.steps[i].status !== constants.step.status.completed)
-                    productCompleted = false
+
             }
 
-            if(productCompleted){
-                product.status = constants.product.status.completed
-                await product.save()
-            }
 
             product ?
                 res.status(status.OK).json(product)
@@ -112,7 +109,20 @@ module.exports = (options) => {
 
     router.delete('/:productID/step/:stepID', async (req,res) => {
         try{
+            var step = await repo.getStep(req.params.productID,req.params.stepID)
             var product = await repo.deleteStep(req.params.productID,req.params.stepID)
+            if(step.status == constants.step.status.current){
+                var currentFound = false
+                for (let i = 0; i < product.steps.length; i++) {
+                    if(!currentFound && product.steps[i].status == constants.step.status.next){
+                        product.steps[i].status = constants.step.status.current
+                        var productUpdated = await repo.updateStatusStep(req.params.productID,product.steps[i]._id,{status: constants.step.status.current})
+                        currentFound = true
+                    }
+                }
+            }
+
+            
             product ?
                 res.status(status.OK).json(product)
             :            

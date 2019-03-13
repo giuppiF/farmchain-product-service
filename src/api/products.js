@@ -2,9 +2,11 @@
 const status = require('http-status')
 const router = require('express').Router();
 const path = require('path')
+const QRCode = require('qrcode')
+
 
 module.exports = (options) => {
-    const {repo, farmService, blockchainService, storageService, storagePath} = options
+    const {repo, farmService, blockchainService, storageService, storagePath,advService, constants} = options
     
     router.get('/', async (req,res) => {
         var products = await repo.getAllProducts();
@@ -190,6 +192,40 @@ module.exports = (options) => {
 
     })
 
+    router.put('/:productID/complete', async (req,res) => {
+        
+       
+        try{
+            var product = await repo.getProduct(req.params.productID)
+            var productCompleted=true
+            for (let i = 0; i < product.steps.length; i++) {
+                if(product.steps[i].status !== constants.step.status.completed)
+                    productCompleted = false
+            }
+            if(productCompleted){
+                product.status = constants.product.status.completed
+                product.labelUrl= 'https://api.farmchain.it/product/types/label/build/?id=' + product._id
+                await product.save()
+                var qrcodeBase64String = await QRCode.toDataURL(product.labelUrl)
+                let qrcodeBase64Image = qrcodeBase64String.split(';base64,').pop();
+                var pathname = path.join( '/product', product._id.toString())
+                var completePath = path.join(storagePath,pathname)
+                var qrcodeFileName='qrcode.png'
+                var generateQRCODE = await storageService.saveBase64ToDir(qrcodeBase64Image,qrcodeFileName,completePath)
+                product.qrcode = path.join(pathname,qrcodeFileName)
+                product.flyer = await advService.singleProductFlyer(product)
+                await product.save()
+
+
+                res.status(status.OK).json(product)
+            }else
+                res.status(400).send({'msg': 'steps not completed'})
+        } catch (err) {
+            res.status(400).send({'msg': err.message})
+        }
+
+    })
+    
     router.put('/:productID/farm', async (req,res) => {
         var productFarmData = {
             farm: req.body

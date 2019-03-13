@@ -23,6 +23,10 @@ mediator.on('db.ready', async (db) => {
         path: config.uploadServiceSettings.path
     })
 
+    var advService = await services.advService.start({
+        storagePath: config.uploadServiceSettings.path
+    })
+
     var app = await server.start({
         port:  config.serverSettings.port,
         repo: repo,
@@ -30,6 +34,7 @@ mediator.on('db.ready', async (db) => {
         blockchainService: blockhainService,
         storagePath: config.uploadServiceSettings.path,
         storageService: storageService,
+        advService: advService,
         constants: config.constants
 
     })
