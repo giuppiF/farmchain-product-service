@@ -209,7 +209,8 @@ module.exports = (options) => {
                 var completePath = path.join(storagePath,pathname)
                 var qrcodeFileName='qrcode.png'
                 var generateQRCODE = await storageService.saveBase64ToDir(qrcodeBase64Image,qrcodeFileName,completePath)
-                product.qrcode = path.join(pathname,qrcodeFileName)
+                product.qrcode.base64 = qrcodeBase64String
+                product.qrcode.src = path.join(pathname,qrcodeFileName)
                 product.flyer = await advService.singleProductFlyer(product)
                 await product.save()
 

@@ -62,7 +62,10 @@ var joiProductSchema = Joi.object({
     }),
     expiration: Joi.string(),
     labelUrl: Joi.string().allow(''),
-    qrcode: Joi.string().allow(''),
+    qrcode: Joi.object().keys({
+        src: Joi.string().allow(''),
+        base64: Joi.string().allow('')
+    }),
     status: Joi.string().valid('In Progress','Completed'),
     category: Joi.string().valid('Frutta','Verdura').required(),
     smartContract: Joi.string(),
