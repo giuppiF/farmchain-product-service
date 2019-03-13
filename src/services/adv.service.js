@@ -23,7 +23,7 @@ const advService = (options) => {
             valign: 'top'
          });
          doc.end();
-         return path.join('product',product._id.toString(),filename)
+         return path.join('/product',product._id.toString(),filename)
       } catch (err){
           throw  Error(err)
       }
