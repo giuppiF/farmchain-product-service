@@ -197,14 +197,11 @@ module.exports = (options) => {
        
         try{
             var product = await repo.getProduct(req.params.productID)
-            var productCompleted=true
-            for (let i = 0; i < product.steps.length; i++) {
-                if(product.steps[i].status !== constants.step.status.completed)
-                    productCompleted = false
-            }
+            var productCompleted= product.steps.every((step) => step.status === constants.step.status.completed)
+
             if(productCompleted){
                 product.status = constants.product.status.completed
-                product.labelUrl= 'https://api.farmchain.it/product/types/label/build/?id=' + product._id
+                product.labelUrl= constants.product.labelUrl + product._id
                 await product.save()
                 var qrcodeBase64String = await QRCode.toDataURL(product.labelUrl)
                 let qrcodeBase64Image = qrcodeBase64String.split(';base64,').pop();

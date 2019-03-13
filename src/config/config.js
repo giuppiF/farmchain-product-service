@@ -36,7 +36,8 @@ const constants = {
         status: {
             inprog: "In Progress",
             completed: "Completed"
-        }
+        },
+        labelUrl: 'https://api.farmchain.it/product/types/label/build/?id='
     }
 }
   

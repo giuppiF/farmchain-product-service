@@ -14,10 +14,12 @@ module.exports = (options) => {
                 name: req.body.name,
                 description: req.body.description,
                 icon: req.body.icon,
-                status:req.body.status,
+                status:constants.step.status.next,
                 order: req.body.order
             }
-
+            var product = await repo.getProduct(req.params.productID)
+            if(product.steps.every((step) => step.status !== constants.step.status.current))
+                stepData.status = constants.step.status.current
 
             var step = await repo.addStep(req.params.productID,stepData)
 
@@ -86,15 +88,9 @@ module.exports = (options) => {
         try{
             
             var product = await repo.updateStatusStep(req.params.productID,req.params.stepID,stepData)
-            for (let i = 0; i < product.steps.length; i++) {
-                if(!currentFound && product.steps[i].status == constants.step.status.next){
-                    product.steps[i].status = constants.step.status.current
-                    var productUpdated = await repo.updateStatusStep(req.params.productID,product.steps[i]._id,{status: constants.step.status.current})
-                    currentFound = true
-                }
-
-            }
-
+            var firstStep = product.steps.find((step) => {return step.status === constants.step.status.next})
+            if(firstStep)
+                product = await repo.updateStatusStep(req.params.productID,firstStep._id,{status: constants.step.status.current})
 
             product ?
                 res.status(status.OK).json(product)
@@ -112,13 +108,10 @@ module.exports = (options) => {
             var step = await repo.getStep(req.params.productID,req.params.stepID)
             var product = await repo.deleteStep(req.params.productID,req.params.stepID)
             if(step.status == constants.step.status.current){
-                var currentFound = false
-                for (let i = 0; i < product.steps.length; i++) {
-                    if(!currentFound && product.steps[i].status == constants.step.status.next){
-                        product.steps[i].status = constants.step.status.current
-                        var productUpdated = await repo.updateStatusStep(req.params.productID,product.steps[i]._id,{status: constants.step.status.current})
-                        currentFound = true
-                    }
+                var firstStep = product.steps.find((step) => {return step.status === constants.step.status.next})
+
+                if(firstStep){
+                    product = await repo.updateStatusStep(req.params.productID,firstStep._id,{status: constants.step.status.current})
                 }
             }
 

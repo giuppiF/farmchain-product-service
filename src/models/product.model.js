@@ -61,8 +61,8 @@ var joiProductSchema = Joi.object({
         description: Joi.string(),
     }),
     expiration: Joi.string(),
-    labelUrl: Joi.string(),
-    qrcode: Joi.string(),
+    labelUrl: Joi.string().allow(''),
+    qrcode: Joi.string().allow(''),
     status: Joi.string().valid('In Progress','Completed'),
     category: Joi.string().valid('Frutta','Verdura').required(),
     smartContract: Joi.string(),
@@ -71,7 +71,7 @@ var joiProductSchema = Joi.object({
     dealers: Joi.array().items(joiDealerSchema),
     media: Joi.array().items(joiMediaSchema),
     lots: Joi.array().items(joiLotSchema),
-    flyer: Joi.string() 
+    flyer: Joi.string() .allow('')
 })
 
 var mongooseProductSchema = new Mongoose.Schema(Joigoose.convert(joiProductSchema));
