@@ -20,7 +20,7 @@ var joiStepSchema = Joi.object().keys({
     status: Joi.string().valid('Current','Next','Completed'),
     order: Joi.number(),
     media: Joi.array().items(joiMediaSchema),
-    date: Joi.string()
+    date: Joi.number()
 })
 
 const joiExtraSchema = Joi.object().keys({
