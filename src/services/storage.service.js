@@ -2,7 +2,7 @@
 const fs = require('fs')
 var mkdirp = require('mkdirp');
 var path = require('path');
-
+var mime = require('mime')
 
 const storageService = (options) => {
 
@@ -71,8 +71,10 @@ const storageService = (options) => {
   }
   const fileToBase64 =  async (filename) => {
     const file_buffer  = fs.readFileSync(filename);
-
-    return file_buffer.toString('base64');
+    var mimeType = mime.getType(filename)
+    var fileBase64 = 'data:' + mimeType + ';base64,'+ file_buffer.toString('base64')
+    
+    return fileBase64
   }
   const deleteDir =  async (pathname) => {
 
