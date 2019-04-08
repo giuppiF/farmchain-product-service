@@ -213,8 +213,15 @@ module.exports = (options) => {
                 product.qrcode.src = path.join(pathname,qrcodeFileName)
                 product.flyer = await advService.singleProductFlyer(product)
                 await product.save()
-
-
+                var farmProductData= {
+                    _id: req.params.productID,
+                    name: product.name,
+                    image: product.image,
+                    updatedAt: Date.now(),
+                    status: product.status,
+                    category: product.category
+                }
+                var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData)
                 res.status(status.OK).json(product)
             }else
                 res.status(400).send({'msg': 'steps not completed'})

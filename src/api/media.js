@@ -22,6 +22,8 @@ module.exports = (options) => {
                 products.push(req.body.products)
             else    
                 products =req.body.products
+
+            
             var geolocal = JSON.parse(req.body.geolocal)
             var loadMedia = mediaFiles.map( async (mediaFile)=> {
                 const mediaData = {
@@ -31,6 +33,7 @@ module.exports = (options) => {
                         latitude: geolocal.coords.latitude
                     }
                 }
+
     
                 var media = await repo.createMedia(mediaData)
                 mediaData._id = media._id
@@ -42,6 +45,7 @@ module.exports = (options) => {
                     var completePath = path.join(storagePath,pathname)
                     var uploadfile = await storageService.saveToDir(mediaFile.path, filename, completePath )
                     media.src= path.join(pathname,filename)
+                    media.base64 = await storageService.fileToBase64(path.join(storagePath,media.src))
                     var smartContract = await blockchainService.createMediaSmartContract()
                     media.smartContract = smartContract
                     media.save()

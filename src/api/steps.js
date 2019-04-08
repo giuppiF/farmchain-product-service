@@ -83,14 +83,24 @@ module.exports = (options) => {
             status: constants.step.status.completed
         }
 
- 
-        var currentFound = false
         try{
             
             var product = await repo.updateStatusStep(req.params.productID,req.params.stepID,stepData)
             var firstStep = product.steps.find((step) => {return step.status === constants.step.status.next})
             if(firstStep)
-                product = await repo.updateStatusStep(req.params.productID,firstStep._id,{status: constants.step.status.current})
+                firstStep.status = constants.step.status.current
+              
+            var thisStep = product.steps.find((step) => {return step._id == req.params.stepID})
+
+            if(thisStep.media.length > 0){
+                var mediaDates  = thisStep.media.map(media => media.timestamp)
+                thisStep.date = Math.max.apply(null, mediaDates)   
+            }else
+                thisStep.date = Date.now()
+
+
+            product.save()
+        
 
             product ?
                 res.status(status.OK).json(product)

@@ -18,13 +18,16 @@ var joiStepSchema = Joi.object().keys({
     icon: Joi.string(),
     status: Joi.string().valid('Current','Next','Completed'),
     order: Joi.number(),
-    media: Joi.array().items(joiMediaSchema)
+    media: Joi.array().items(joiMediaSchema),
+    date: Joi.string()
 })
 
-var joiExtraSchema = Joi.object().keys({
-    name: Joi.string(),
-    description: Joi.string(),
-    image: Joi.string()
+const joiExtraSchema = Joi.object().keys({
+    title: Joi.string(),
+    image:  Joi.string(),
+    content: Joi.string(),
+    type: Joi.string().valid("Receipt","Pairing","Advice"),
+    status: Joi.string().valid("draft","published")
 })
 
 var joiDealerSchema = Joi.object().keys({
