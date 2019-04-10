@@ -81,6 +81,19 @@ module.exports = (options) => {
     })
 
 
+    router.get('/:mediaId/base64', async (req,res) => {
+        try{
+            var media = await repo.getMedia(req.params.mediaId) 
+            if(media){
+                var mediaBase64 = await storageService.fileToBase64(path.join(storagePath,media.src))
+                res.status(status.OK).json(mediaBase64)
+            }else
+                res.status(404).json({msg: 'media not found'})
+        }catch (err) {
+            res.status(400).json({msg: err.message})
+        }
+    })
+
 
     return router;
 }

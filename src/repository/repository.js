@@ -174,7 +174,15 @@ const repository = () => {
       throw Error(error)
     }
   }
-    
+  const getMedia = async (id) =>
+  {
+    try {
+      let media = await Media.findById(id)
+      return media
+    } catch (error){
+      throw Error(error);
+    }
+  }    
   const updateMedia = async (id, mediaBody) => {
     try{
       let media = await Media.findByIdAndUpdate(id,mediaBody,{new: true,runValidators: true})
@@ -356,6 +364,7 @@ const repository = () => {
     deleteProductType,
     createMedia,
     updateMedia,
+    getMedia,
     addMediasToProduct,
     updateProductMedia,
     updateProductRawProducts,
