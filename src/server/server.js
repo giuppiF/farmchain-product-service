@@ -36,7 +36,7 @@ const start  = (options) => {
         const productDealersApi = require('../api/dealers')(options)
         const productStepsApi = require('../api/steps')(options)
         const mediaApi = require('../api/media')(options)
-        const extraApi = require('../api/extra')(options)
+        const extraApi = require('../api/extras')(options)
         app.use('/product/media',mediaApi)
         app.use('/product/types',productTypesApi)
         app.use('/product',productApi)
