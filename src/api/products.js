@@ -268,7 +268,7 @@ module.exports = (options) => {
                 })
                 Promise.all(getRawProducts).then( async ()=>{
                     try{
-                        rawProductsData={
+                        var rawProductsData={
                             rawProducts: rawProducts
                         }
                         var product = await repo.updateProductRawProducts(req.params.productID,rawProductsData)
