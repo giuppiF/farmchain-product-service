@@ -27,7 +27,7 @@ const joiExtraSchema = Joi.object().keys({
     title: Joi.string(),
     image:  Joi.string(),
     content: Joi.string(),
-    type: Joi.string().valid("Receipt","Pairing","Advice"),
+    type: Joi.string().valid("Recipe","Pairing","Advice"),
     status: Joi.string().valid("draft","published")
 })
 

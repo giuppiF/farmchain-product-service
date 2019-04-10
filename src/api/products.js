@@ -256,16 +256,30 @@ module.exports = (options) => {
             res.status(200).send({'msg': 'no raw products'})
 
         }else{
-            const rawProductsData = {
-                rawProducts: req.body
-            }
+
             
             try{
-                var product = await repo.updateProductRawProducts(req.params.productID,rawProductsData)
-                product ?
-                    res.status(status.OK).json(product)
-                :
-                    res.status(404).send()
+
+                var rawProductsIDs = req.body
+                var rawProducts = []
+                var getRawProducts = rawProductsIDs.map( async (rawProductId)=> {
+                    var rawProduct = await repo.getProduct(rawProductId)
+                    rawProducts.push(rawProduct)
+                })
+                Promise.all(getRawProducts).then( async ()=>{
+                    try{
+                        var product = await repo.updateProductRawProducts(req.params.productID,rawProducts)
+                        product ?
+                            res.status(status.OK).json(product)
+                        :
+                            res.status(404).send()
+                
+                        
+                    }catch (err) {
+                        res.status(400).json({msg: err.message})
+                    }
+                })
+                
             } catch (err) {
                 res.status(400).send({'msg': err.message})
             }
