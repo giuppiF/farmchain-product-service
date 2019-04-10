@@ -253,7 +253,7 @@ module.exports = (options) => {
     })
     router.put('/:productID/rawproducts', async (req,res) => {
         if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-            res.status(200).send({'msg': 'no raw products'})
+            res.status(401).send({'msg': 'no raw products'})
 
         }else{
 
@@ -262,12 +262,17 @@ module.exports = (options) => {
 
                 var rawProductsIDs = req.body
                 var rawProducts = []
+                console.log(rawProductsIDs)
                 var getRawProducts = rawProductsIDs.map( async (rawProductId)=> {
                     var rawProduct = await repo.getProduct(rawProductId)
+                    console.log('before')
                     rawProducts.push(rawProduct)
+                    console.log(rawProducts)
+                    console.log('after')
                 })
                 Promise.all(getRawProducts).then( async ()=>{
                     try{
+                        console.log(rawProducts)
                         var product = await repo.updateProductRawProducts(req.params.productID,rawProducts)
                         product ?
                             res.status(status.OK).json(product)
