@@ -262,18 +262,16 @@ module.exports = (options) => {
 
                 var rawProductsIDs = req.body
                 var rawProducts = []
-                console.log(rawProductsIDs)
                 var getRawProducts = rawProductsIDs.map( async (rawProductId)=> {
                     var rawProduct = await repo.getProduct(rawProductId)
-                    console.log('before')
                     rawProducts.push(rawProduct)
-                    console.log(rawProducts)
-                    console.log('after')
                 })
                 Promise.all(getRawProducts).then( async ()=>{
                     try{
-                        console.log(rawProducts)
-                        var product = await repo.updateProductRawProducts(req.params.productID,rawProducts)
+                        rawProductsData={
+                            rawProducts: rawProducts
+                        }
+                        var product = await repo.updateProductRawProducts(req.params.productID,rawProductsData)
                         product ?
                             res.status(status.OK).json(product)
                         :
