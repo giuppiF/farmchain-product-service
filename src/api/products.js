@@ -251,7 +251,27 @@ module.exports = (options) => {
 
 
     })
+    router.put('/:productID/rawproducts', async (req,res) => {
+        if(req.body.constructor === Object && Object.keys(req.body).length === 0){
+            res.status(200).send({'msg': 'no raw products'})
 
+        }else{
+            const rawProductsData = {
+                rawProducts: req.body
+            }
+            
+            try{
+                var product = await repo.updateProductRawProducts(req.params.productID,rawProductsData)
+                product ?
+                    res.status(status.OK).json(product)
+                :
+                    res.status(404).send()
+            } catch (err) {
+                res.status(400).send({'msg': err.message})
+            }
+        }
+
+    })
 
     return router;
 }

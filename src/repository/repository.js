@@ -281,8 +281,60 @@ const repository = () => {
       throw Error(error)
     }
   }
+  const updateProductRawProducts = async (productId, productBody) => {
+    try{
+      let product = await Product.findByIdAndUpdate(productId,productBody,{new: true,runValidators: true})
+      return product
+    } catch (error) {
+      throw Error(error)
+    }
+  }
 
+  const getExtra = async (productId,extraId) =>
+  {
+    try {
+      let product = await Product.findById(productId)
+      return product.extras.id(extraId)
+    } catch (error){
+      throw Error(error);
+    }
+  }
 
+  const addExtra = async (productId, extra) => {
+    try{
+      let product = await Product.findByIdAndUpdate(productId,{ $push: { extras: extra }},{new: true,runValidators: true})
+      let product_udpated = await Product.findById(productId)
+      let position = product_udpated.extras.length - 1
+      return product_udpated.extras[position]
+    } catch (error) {
+      throw Error(error)
+    }
+  }
+
+  const updateExtra= async (productId, extraId, extraData) => {
+    try {
+      let product = await Product.findOneAndUpdate(
+        {_id: productId, "extras._id" : extraId}, 
+        { "extras.$" : extraData }, 
+        { new: true,runValidators: true })
+
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
+  const deleteExtra = async (productId, extraId) => {
+    try{
+      let product = await Product.findOneAndUpdate(
+        {_id: productId, "extras._id" : extraId},
+        {$pull: {extras: {_id: extraId }}},
+        { new: true,runValidators: true })
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
 
 
   return Object.create({
@@ -306,13 +358,18 @@ const repository = () => {
     updateMedia,
     addMediasToProduct,
     updateProductMedia,
+    updateProductRawProducts,
     addStep,
     getStep,
     updateStep,
     updateSteps,
     updateStatusStep,
     deleteStep,
-    updateFarm
+    updateFarm,
+    getExtra,
+    addExtra,
+    updateExtra,
+    deleteExtra
   })
 }
 

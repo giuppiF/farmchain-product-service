@@ -47,6 +47,14 @@ const joiLotSchema = Joi.object().keys({
     description: Joi.string(),
 })
 
+var joiRawProductSchema = Joi.object({
+    name: Joi.string(),
+    description: Joi.string(),
+    image: Joi.string(),
+    expiration: Joi.string(),
+    smartContract: Joi.string(),
+    steps: Joi.array().items(joiStepSchema)
+})
 
 var joiProductSchema = Joi.object({
     name: Joi.string().required(),
@@ -78,7 +86,8 @@ var joiProductSchema = Joi.object({
     dealers: Joi.array().items(joiDealerSchema),
     media: Joi.array().items(joiMediaSchema),
     lots: Joi.array().items(joiLotSchema),
-    flyer: Joi.string() .allow('')
+    flyer: Joi.string().allow(''),
+    rawProducts: Joi.array().items(joiRawProductSchema)
 })
 
 var mongooseProductSchema = new Mongoose.Schema(Joigoose.convert(joiProductSchema));
