@@ -45,7 +45,6 @@ module.exports = (options) => {
                     var completePath = path.join(storagePath,pathname)
                     var uploadfile = await storageService.saveToDir(mediaFile.path, filename, completePath )
                     media.src= path.join(pathname,filename)
-                    media.base64 = await storageService.fileToBase64(path.join(storagePath,media.src))
                     var smartContract = await blockchainService.createMediaSmartContract()
                     media.smartContract = smartContract
                     media.save()
