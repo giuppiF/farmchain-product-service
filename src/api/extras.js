@@ -70,23 +70,12 @@ module.exports = (options) => {
 
             var product = await repo.updateExtra(req.params.productID,req.params.extraID,extraData) 
 
-            var updateProductsExtras = farm.products.map( async (product) => {
-                try{
-                    await productService.updateProductExtra(product._id, extraData)
-                } catch (err) {
-                    if(err.message != 404 ){
-                        res.status(400).send({'msg' : err.message})
-                        return
-                    }
-                }
-                
-            })
-            Promise.all(updateProductsExtras).then( async ()=>{
-                farm ?
-                    res.status(status.OK).json(farm)
-                :            
-                    res.status(404).send()
-            })
+           
+            product ?
+                res.status(status.OK).json(product)
+            :            
+                res.status(404).send()
+     
         } catch (err) {
             res.status(400).send({'msg' : err.message})
         }
@@ -96,27 +85,19 @@ module.exports = (options) => {
         try{
             var pathname = path.join(storagePath, req.originalUrl)
             var extra = await repo.getExtra(req.params.productID,req.params.extraID)
-            if(extra.image)
+            if(extra.image){
                 var deleteFile = await storageService.deleteFile(extra.image,storagePath)  
-                var deleteDir = await storageService.deleteDir(pathname)  
-            var farm = await repo.deleteExtra(req.params.productID,req.params.extraID)
-            var deleteProductsExtra = farm.products.map( async (product) => {
-                try{
-                    await productService.deleteProductExtra(product._id, req.params.extraID)
-                } catch (err) {
-                    if(err.message != 404 ){
-                        res.status(400).send({'msg' : err})
-                        return
-                    }
-                }
+                var deleteDir = await storageService.deleteDir(pathname) 
+            }
                 
-            })
-            Promise.all(deleteProductsExtra).then( async ()=>{
-                farm ?
-                    res.status(status.OK).json(farm)
-                :            
-                    res.status(404).send()
-            })
+            var product = await repo.deleteExtra(req.params.productID,req.params.extraID)
+
+
+            product ?
+                res.status(status.OK).json(product)
+            :            
+                res.status(404).send()
+
         } catch (err) {
             res.status(400).send({'msg' : err.message})
         }
