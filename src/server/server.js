@@ -16,7 +16,7 @@ const start  = (options) => {
         const app = express()
 
         // morgan gestisce il logging sul web server (formati dev, short ... )
-        app.use(morgan('dev'))
+        app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
 
         // helmet aggiunge header di sicurezza
         app.use(helmet())
