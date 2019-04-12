@@ -16,12 +16,16 @@ const start  = (options) => {
 
         const app = express()
 
-        // morgan gestisce il logging sul web server (formati dev, short ... )
-        //app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
-        morganBody(app);
+
         // helmet aggiunge header di sicurezza
         app.use(helmet())
         app.use(bodyParser.json()); 
+
+
+                // morgan gestisce il logging sul web server (formati dev, short ... )
+        //app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
+        morganBody(app);
+        
         app.use(formData.parse({
             uploadDir: options.storagePath,
             autoClean: true
