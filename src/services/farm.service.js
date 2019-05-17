@@ -3,9 +3,8 @@ const axios = require('axios')
 
 const farmService = (options) => {
 
-  const serviceToken = "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtYWlsIjoiY2lyY29sb0BsZXR0b3JpLml0IiwiaWQiOiI1Y2RlYzVkNzJjN2UzZTAwMGY0YTk3OGQiLCJmYXJtIjoiNWMwODFiN2ZiNjc4MTcwMDBlMDc4Y2E5IiwiZXhwIjoxNTYzMjg4MTE1LCJpYXQiOjE1NTgxMDQxMTV9.2ZkA0WqRiHt1RDqBrMPDaux-vjkkpVuXOsHcgJ-QA3o"
 
-    const addProductToFarm = async (farmId,product) => {
+    const addProductToFarm = async (farmId,product,serviceToken) => {
         try{
             const url = `http://${options.host}:${options.port}/farm/${farmId}/product`
             let config = {
@@ -21,7 +20,7 @@ const farmService = (options) => {
         }
     }
 
-const updateProductToFarm = async (farmId,product) => {
+const updateProductToFarm = async (farmId,product,serviceToken) => {
     try{
         const url = `http://${options.host}:${options.port}/farm/${farmId}/product/${product._id}`
         console.log(url)
@@ -38,7 +37,7 @@ const updateProductToFarm = async (farmId,product) => {
     }
 }
 
-const deleteProductToFarm = async (farmId,productId) => {
+const deleteProductToFarm = async (farmId,productId,serviceToken) => {
     try{
         const url = `http://${options.host}:${options.port}/farm/${farmId}/product/${productId}`
         console.log(url)

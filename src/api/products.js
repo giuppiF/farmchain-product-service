@@ -55,7 +55,8 @@ module.exports = (options) => {
         }
 
         try{
-            var farm = await farmService.addProductToFarm(product.farm._id,lightProductData)
+            const { headers: { authorizationToken } } = req;
+            var farm = await farmService.addProductToFarm(product.farm._id,lightProductData,authorizationToken)
             if(farm)
                 res.status(status.OK).json(product)
             else
@@ -135,7 +136,8 @@ module.exports = (options) => {
             
             farmProductData.status = product.status
             farmProductData.category = product.category
-            var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData)
+            const { headers: { authorizationToken } } = req;
+            var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData,authorizationToken)
             if(!farm){
                 res.status(404).send()
                 return;
@@ -157,7 +159,8 @@ module.exports = (options) => {
                 res.status(404).send()
                 return
             }
-            var farm = await farmService.deleteProductToFarm(product.farm._id,product._id)
+            const { headers: { authorizationToken } } = req;
+            var farm = await farmService.deleteProductToFarm(product.farm._id,product._id,authorizationToken)
             farm ?
                 res.status(status.OK).json(product)             
             :
@@ -221,7 +224,8 @@ module.exports = (options) => {
                     status: product.status,
                     category: product.category
                 }
-                var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData)
+                const { headers: { authorizationToken } } = req;
+                var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData,authorizationToken)
                 res.status(status.OK).json(product)
             }else
                 res.status(400).send({'msg': 'steps not completed'})
