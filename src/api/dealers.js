@@ -4,10 +4,10 @@ const router = require('express').Router();
 
 
 module.exports = (options) => {
-    const {repo} = options
+    const {repo, auth} = options
     
 
-    router.put('/:productID/dealer', async (req,res) => {
+    router.put('/:productID/dealer', auth.required, auth.isFarmAdmin, async (req,res) => {
         if(req.body.constructor === Object && Object.keys(req.body).length === 0){
             res.status(200).send({'msg': 'no dealers'})
 
@@ -29,7 +29,7 @@ module.exports = (options) => {
 
     })
 
-    router.put('/:productID/dealer/:dealerID', async (req,res) => {
+    router.put('/:productID/dealer/:dealerID', auth.required, auth.isFarmAdmin, async (req,res) => {
 
         var dealerData = {
             _id: req.params.dealerID,
@@ -50,7 +50,7 @@ module.exports = (options) => {
         }
     })
 
-    router.delete('/:productID/dealer/:dealerID', async (req,res) => {
+    router.delete('/:productID/dealer/:dealerID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
             var product = await repo.deleteDealer(req.params.productID,req.params.dealerID)
             product ?

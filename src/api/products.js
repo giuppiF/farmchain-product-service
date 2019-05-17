@@ -6,14 +6,14 @@ const QRCode = require('qrcode')
 
 
 module.exports = (options) => {
-    const {repo, farmService, blockchainService, storageService, storagePath,advService, constants} = options
+    const {repo, farmService, blockchainService, storageService, storagePath,advService, constants, auth} = options
     
     router.get('/', async (req,res) => {
         var products = await repo.getAllProducts();
         res.status(status.OK).json(products)
     })
 
-    router.post('/', async (req,res) => {
+    router.post('/', auth.required, auth.isFarmAdminForCreation, async (req,res) => {
           
         var productData = {
             name: req.body.name,
@@ -81,7 +81,7 @@ module.exports = (options) => {
         }
     })
 
-    router.get('/:productID', async (req,res) => {
+    router.get('/:productID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
             var product = await repo.getProduct(req.params.productID)
             product ?
@@ -93,7 +93,7 @@ module.exports = (options) => {
         }
     })
 
-    router.put('/:productID', async (req,res) => {
+    router.put('/:productID',auth.required, auth.isFarmAdmin, async (req,res) => {
         var productData = {
             _id: req.params.productID,
             name: req.body.name,
@@ -150,7 +150,7 @@ module.exports = (options) => {
         }
 
     })
-    router.delete('/:productID', async (req,res) => {
+    router.delete('/:productID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
             var product = await repo.deleteProduct(req.params.productID)
             if(!product){
@@ -170,7 +170,7 @@ module.exports = (options) => {
 
 
 
-    router.put('/:productID/media', async (req,res) => {
+    router.put('/:productID/media',auth.required, auth.isFarmAdmin, async (req,res) => {
         if(req.body.constructor === Object && Object.keys(req.body).length === 0){
             res.status(200).send({'msg': 'no medias'})
 
@@ -192,7 +192,7 @@ module.exports = (options) => {
 
     })
 
-    router.put('/:productID/complete', async (req,res) => {
+    router.put('/:productID/complete', auth.required, auth.isFarmAdmin,async (req,res) => {
         
        
         try{
@@ -231,7 +231,7 @@ module.exports = (options) => {
 
     })
     
-    router.put('/:productID/farm', async (req,res) => {
+    router.put('/:productID/farm', auth.required, auth.isFarmAdmin,async (req,res) => {
         var productFarmData = {
             farm: req.body
         }
@@ -251,7 +251,7 @@ module.exports = (options) => {
 
 
     })
-    router.put('/:productID/rawproducts', async (req,res) => {
+    router.put('/:productID/rawproducts', auth.required, auth.isFarmAdmin,async (req,res) => {
         if(req.body.constructor === Object && Object.keys(req.body).length === 0){
             res.status(401).send({'msg': 'no raw products'})
 

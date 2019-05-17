@@ -1,4 +1,5 @@
-const {dbSettings, serverSettings,farmServiceSettings,bcServiceSettings, uploadServiceSettings, constants} = require('./config')
+const {dbSettings, serverSettings,farmServiceSettings,bcServiceSettings, uploadServiceSettings, constants, authSettings} = require('./config')
 const db = require('./mongo')
+const authConfig = require('./auth')
 
-module.exports = Object.assign({}, {dbSettings, serverSettings, farmServiceSettings,bcServiceSettings, db, uploadServiceSettings, constants})
+module.exports = Object.assign({}, {dbSettings, serverSettings, farmServiceSettings,bcServiceSettings, db, uploadServiceSettings, constants, authSettings, authConfig})

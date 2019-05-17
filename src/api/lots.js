@@ -4,10 +4,10 @@ const router = require('express').Router();
 
 
 module.exports = (options) => {
-    const {repo} = options
+    const {repo, auth} = options
     
 
-    router.put('/:productID/lot', async (req,res) => {
+    router.put('/:productID/lot', auth.required, auth.isFarmAdmin, async (req,res) => {
         if(req.body.constructor === Object && Object.keys(req.body).length === 0){
             res.status(200).send({'msg': 'no lots'})
 
@@ -29,7 +29,7 @@ module.exports = (options) => {
 
     })
 
-    router.put('/:productID/lot/:lotID', async (req,res) => {
+    router.put('/:productID/lot/:lotID', auth.required, auth.isFarmAdmin, async (req,res) => {
 
         var lotData = {
             _id: req.params.lotID,
@@ -48,7 +48,7 @@ module.exports = (options) => {
         }
     })
 
-    router.delete('/:productID/lot/:lotID', async (req,res) => {
+    router.delete('/:productID/lot/:lotID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
             var product = await repo.deleteLot(req.params.productID,req.params.lotID)
             product ?

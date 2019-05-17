@@ -4,11 +4,11 @@ const router = require('express').Router();
 
 
 module.exports = (options) => {
-    const {repo, constants} = options
+    const {repo, constants, auth} = options
     
 
 
-    router.post('/:productID/step/', async (req,res) => {
+    router.post('/:productID/step/', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
             var stepData = {
                 name: req.body.name,
@@ -33,7 +33,7 @@ module.exports = (options) => {
 
 
 
-    router.put('/:productID/step', async (req,res) => {
+    router.put('/:productID/step', auth.required, auth.isFarmAdmin, async (req,res) => {
         if(req.body.constructor === Object && Object.keys(req.body).length === 0){
             res.status(200).send({'msg': 'no steps'})
 
@@ -55,7 +55,7 @@ module.exports = (options) => {
 
     })
 
-    router.put('/:productID/step/:stepID', async (req,res) => {
+    router.put('/:productID/step/:stepID', auth.required, auth.isFarmAdmin, async (req,res) => {
 
         var stepData = {
             _id: req.params.stepID,
@@ -77,7 +77,7 @@ module.exports = (options) => {
         }
     })
 
-    router.put('/:productID/step/:stepID/close/', async (req,res) => {
+    router.put('/:productID/step/:stepID/close/', auth.required, auth.isFarmAdmin, async (req,res) => {
 
         var stepData = {
             status: constants.step.status.completed
@@ -113,7 +113,7 @@ module.exports = (options) => {
         }
     })
 
-    router.delete('/:productID/step/:stepID', async (req,res) => {
+    router.delete('/:productID/step/:stepID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
             var step = await repo.getStep(req.params.productID,req.params.stepID)
             var product = await repo.deleteStep(req.params.productID,req.params.stepID)

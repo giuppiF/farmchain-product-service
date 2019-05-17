@@ -27,6 +27,11 @@ mediator.on('db.ready', async (db) => {
         storagePath: config.uploadServiceSettings.path
     })
 
+    var auth = await config.authConfig.start({
+        secret: config.authSettings.JWTSecret,
+        repo: repo
+    })
+
     var app = await server.start({
         port:  config.serverSettings.port,
         repo: repo,
@@ -35,7 +40,8 @@ mediator.on('db.ready', async (db) => {
         storagePath: config.uploadServiceSettings.path,
         storageService: storageService,
         advService: advService,
-        constants: config.constants
+        constants: config.constants,
+        auth: auth
 
     })
 

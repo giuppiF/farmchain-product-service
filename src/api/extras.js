@@ -4,9 +4,9 @@ const router = require('express').Router();
 const path = require('path')
 
 module.exports = (options) => {
-    const {repo, storageService, storagePath, productService} = options
+    const {repo, storageService, storagePath, productService, auth} = options
 
-    router.post('/:productID/extra', async (req,res) => {
+    router.post('/:productID/extra', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
             var extraData = {
                 title: req.body.title,
@@ -38,7 +38,7 @@ module.exports = (options) => {
 
     })
 
-    router.put('/:productID/extra/:extraID', async (req,res) => {
+    router.put('/:productID/extra/:extraID', auth.required, auth.isFarmAdmin, async (req,res) => {
 
 
         var extraData = {
@@ -81,7 +81,7 @@ module.exports = (options) => {
         }
     })
 
-    router.delete('/:productID/extra/:extraID', async (req,res) => {
+    router.delete('/:productID/extra/:extraID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
             var pathname = path.join(storagePath, req.originalUrl)
             var extra = await repo.getExtra(req.params.productID,req.params.extraID)

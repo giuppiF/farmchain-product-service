@@ -41,4 +41,10 @@ const constants = {
     }
 }
   
-module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants})
+
+
+const authSettings = {
+    JWTSecret: process.env.JWT_SECRET
+}
+
+module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants, authSettings})
