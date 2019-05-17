@@ -55,8 +55,8 @@ module.exports = (options) => {
         }
 
         try{
-            const { headers: { authorizationToken } } = req;
-            var farm = await farmService.addProductToFarm(product.farm._id,lightProductData,authorizationToken)
+            const { headers: { authorization } } = req;
+            var farm = await farmService.addProductToFarm(product.farm._id,lightProductData,authorization)
             if(farm)
                 res.status(status.OK).json(product)
             else
@@ -136,8 +136,8 @@ module.exports = (options) => {
             
             farmProductData.status = product.status
             farmProductData.category = product.category
-            const { headers: { authorizationToken } } = req;
-            var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData,authorizationToken)
+            const { headers: { authorization } } = req;
+            var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData,authorization)
             if(!farm){
                 res.status(404).send()
                 return;
@@ -159,8 +159,8 @@ module.exports = (options) => {
                 res.status(404).send()
                 return
             }
-            const { headers: { authorizationToken } } = req;
-            var farm = await farmService.deleteProductToFarm(product.farm._id,product._id,authorizationToken)
+            const { headers: { authorization } } = req;
+            var farm = await farmService.deleteProductToFarm(product.farm._id,product._id,authorization)
             farm ?
                 res.status(status.OK).json(product)             
             :
@@ -224,8 +224,8 @@ module.exports = (options) => {
                     status: product.status,
                     category: product.category
                 }
-                const { headers: { authorizationToken } } = req;
-                var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData,authorizationToken)
+                const { headers: { authorization } } = req;
+                var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData,authorization)
                 res.status(status.OK).json(product)
             }else
                 res.status(400).send({'msg': 'steps not completed'})
