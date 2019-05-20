@@ -4,6 +4,7 @@ const morganBody = require('morgan-body')
 const helmet = require('helmet')
 const bodyParser = require('body-parser');
 const formData = require("express-form-data");
+const cors = require('cors')
 
 const start  = (options) => {
     return new Promise((resolve,reject) =>{
@@ -20,7 +21,7 @@ const start  = (options) => {
         // helmet aggiunge header di sicurezza
         app.use(helmet())
         app.use(bodyParser.json()); 
-
+	app.use(cors())
 
                 // morgan gestisce il logging sul web server (formati dev, short ... )
         //app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
