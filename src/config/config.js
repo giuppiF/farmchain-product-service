@@ -40,11 +40,26 @@ const constants = {
         labelUrl: 'https://api.farmchain.it/product/types/label/build/?id='
     }
 }
-  
+const host = 'http://product:' + serverSettings.port
+const swaggerOptions = {
+    swaggerDefinition: {
+      openapi: '3.0.0',
+      components: {},
+      info: {
+        title: 'Product service API',
+        version: '1.0.0',
+        description: 'Microservice PRODUCT api documentation',
+      },
+    },
+    host: host,
+    basePath: '/product',
+    // List of files to be processes. You can also set globs './routes/*.js'
+    apis: ['src/**/*.js'],
+  };  
 
 
 const authSettings = {
     JWTSecret: process.env.JWT_SECRET
 }
 
-module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants, authSettings})
+module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants, authSettings,swaggerOptions})

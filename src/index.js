@@ -41,7 +41,8 @@ mediator.on('db.ready', async (db) => {
         storageService: storageService,
         advService: advService,
         constants: config.constants,
-        auth: auth
+        auth: auth,
+        swaggerOptions: config.swaggerOptions
 
     })
 

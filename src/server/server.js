@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 const formData = require("express-form-data");
 const cors = require('cors')
 
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 const start  = (options) => {
     return new Promise((resolve,reject) =>{
         if(!options.repo){
@@ -21,9 +24,16 @@ const start  = (options) => {
         // helmet aggiunge header di sicurezza
         app.use(helmet())
         app.use(bodyParser.json()); 
-	app.use(cors())
+	    app.use(cors())
 
-                // morgan gestisce il logging sul web server (formati dev, short ... )
+        // Swagger API docs implementation
+        const swaggerSpec = swaggerJsdoc(options.swaggerOptions);
+        app.use('/product/api-docs.json', (req,res)=>{
+            res.send(swaggerSpec)
+        });
+        app.use('/product/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+        // morgan gestisce il logging sul web server (formati dev, short ... )
         //app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
         
         app.use(formData.parse({

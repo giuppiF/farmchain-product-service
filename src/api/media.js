@@ -6,6 +6,66 @@ const path = require('path')
 module.exports = (options) => {
     const {repo, storagePath, storageService, blockchainService} = options
     
+   /**
+   * @swagger
+   * /product/media:
+   *   post:
+   *     summary: Create Media 
+   *     description: API for media creation
+   *     tags: [Media]
+   *     security:
+   *        - bearerAuth: []
+   *     produces:
+   *       - application/json
+   *     requestBody:
+   *        content:
+   *            multipart/form-data:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 products:
+   *                   name: ProductsId
+   *                   type: array
+   *                   items:
+   *                       type: string
+   *                 media:
+   *                   name: Media
+   *                   type: array
+   *                   items:
+   *                       type: string
+   *                       format: binary
+   *                 geolocal:
+   *                   name: Geolocal
+   *                   type: object
+   *                   properties:
+   *                     timestamp:
+   *                       name: Timestamp
+   *                       type: string
+   *                     coords:
+   *                       name: Coordinates
+   *                       type: object
+   *                       properties:
+   *                          latitude:
+   *                            name: Latitude
+   *                            type: string
+   *                          longitude:
+   *                            name: Longitude
+   *                            type: string
+   *     responses:
+   *             200:
+   *                 description: Product object
+   *                 content:
+   *                     application/json:
+   *                        schema:
+   *                            $ref: '#/components/schemas/Product'
+   *             400:
+   *                 description: Steps not updated for a validation error
+   *             401:
+   *                 description: Not authorized
+   *             404:
+   *                 description: Steps not updated for a generic database error
+   *                            
+   */
 
     router.post('/', async (req,res) => {
         try{
@@ -17,7 +77,7 @@ module.exports = (options) => {
                 mediaFiles.push(req.files.media)
             else    
                 mediaFiles = req.files.media
-    
+            console.log(mediaFiles)
             if(!Array.isArray(req.body.products))
                 products.push(req.body.products)
             else    
@@ -79,7 +139,39 @@ module.exports = (options) => {
         }
 
     })
-
+     /**
+   * @swagger
+   * /product/media/{mediaId}/base64:
+   *   get:
+   *     summary: Get Media Base64
+   *     description: Get a media base 64 versione
+   *     security:
+   *        - bearerAuth: []
+   *     tags: [Product]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *        - name: mediaId
+   *          in: path
+   *          required: true
+   *          description: Media id string
+   *          schema:
+   *             type : string
+   *             format: byte
+   *             minimum: 1
+   *     responses:
+   *             200:
+   *                 content:
+   *                     application/json:
+   *                        schema:
+   *                            type:string
+   *             400:
+   *                 description: Application error
+   *             401:
+   *                 description: Not authorized
+   *             404:
+   *                 description: Media not found
+   */
 
     router.get('/:mediaId/base64', async (req,res) => {
         try{

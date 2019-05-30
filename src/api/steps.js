@@ -6,7 +6,53 @@ const router = require('express').Router();
 module.exports = (options) => {
     const {repo, constants, auth} = options
     
-
+       /**
+   * @swagger
+   * tags:
+   *   name: ProductSteps
+   *   description: List Product's Steps API
+   */
+          /**
+   * @swagger
+   * /product/{productId}/step:
+   *   post:
+   *     summary: Create Product's Step
+   *     description: API for product's step creation
+   *     tags: [ProductSteps]
+   *     security:
+   *        - bearerAuth: []
+   *     parameters:
+   *        - name: productId
+   *          in: path
+   *          required: true
+   *          description: Product id string
+   *          schema:
+   *             type : string
+   *             format: byte
+   *             minimum: 1
+   *     produces:
+   *       - application/json
+   *     requestBody:
+   *        content:
+   *            multipart/form-data:
+   *             schema:
+   *               type: object
+   *               $ref: '#/components/schemas/ProductStep'
+   *     responses:
+   *             200:
+   *                 description: Product object
+   *                 content:
+   *                     application/json:
+   *                        schema:
+   *                            $ref: '#/components/schemas/Product'
+   *             400:
+   *                 description: Step not created for a validation error
+   *             401:
+   *                 description: Not authorized
+   *             404:
+   *                 description: Step not created for a generic database error
+   *                            
+   */
 
     router.post('/:productID/step/', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
@@ -32,6 +78,49 @@ module.exports = (options) => {
     })
 
 
+   /**
+   * @swagger
+   * /product/{productId}/step:
+   *   put:
+   *     summary: Update Product's Steps MASSIVE
+   *     description: API for product's steps updated
+   *     tags: [ProductSteps]
+   *     security:
+   *        - bearerAuth: []
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *        - name: productId
+   *          in: path
+   *          required: true
+   *          description: Product id string
+   *          schema:
+   *             type : string
+   *             format: byte
+   *             minimum: 1
+   *     requestBody:
+   *        content:
+   *            multipart/form-data:
+   *             schema:
+   *               type: array
+   *               items:
+   *                   $ref: '#/components/schemas/ProductStep'
+   *     responses:
+   *             200:
+   *                 description: Product object
+   *                 content:
+   *                     application/json:
+   *                        schema:
+   *                            $ref: '#/components/schemas/Product'
+   *             400:
+   *                 description: Steps not updated for a validation error
+   *             401:
+   *                 description: Not authorized
+   *             404:
+   *                 description: Steps not updated for a generic database error
+   *                            
+   */
+
 
     router.put('/:productID/step', auth.required, auth.isFarmAdmin, async (req,res) => {
         if(req.body.constructor === Object && Object.keys(req.body).length === 0){
@@ -55,6 +144,57 @@ module.exports = (options) => {
 
     })
 
+         /**
+   * @swagger
+   * /product/{productId}/step/{stepId}:
+   *   put:
+   *     summary: Update Product's Step
+   *     description: API for product's Step update
+   *     tags: [ProductSteps]
+   *     security:
+   *        - bearerAuth: []
+   *     parameters:
+   *        - name: productId
+   *          in: path
+   *          required: true
+   *          description: Product id string
+   *          schema:
+   *             type : string
+   *             format: byte
+   *             minimum: 1
+   *        - name: stepId
+   *          in: path
+   *          required: true
+   *          description: Step id string
+   *          schema:
+   *             type : string
+   *             format: byte
+   *             minimum: 1
+   *     produces:
+   *       - application/json
+   *     requestBody:
+   *        content:
+   *            multipart/form-data:
+   *             schema:
+   *               type: object
+   *               $ref: '#/components/schemas/ProductStep'
+   *     responses:
+   *             200:
+   *                 description: Product object
+   *                 content:
+   *                     application/json:
+   *                        schema:
+   *                            $ref: '#/components/schemas/Product'
+   *             400:
+   *                 description: Step not updated for a validation error
+   *             401:
+   *                 description: Not authorized
+   *             404:
+   *                 description: Step not updated for a generic database error
+   *                            
+   */
+
+
     router.put('/:productID/step/:stepID', auth.required, auth.isFarmAdmin, async (req,res) => {
 
         var stepData = {
@@ -76,6 +216,49 @@ module.exports = (options) => {
             res.status(400).send({'msg' : err.message})
         }
     })
+
+
+     /**
+   * @swagger
+   * /product/{productId}/step/{stepId}/close:
+   *   put:
+   *     summary: Close Product's Step
+   *     description: Close a single product step
+   *     security:
+   *        - bearerAuth: []
+   *     tags: [ProductSteps]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *        - name: productId
+   *          in: path
+   *          required: true
+   *          description: Product id string
+   *          schema:
+   *             type : string
+   *             format: byte
+   *             minimum: 1
+   *        - name: stepId
+   *          in: path
+   *          required: true
+   *          description: Step id string
+   *          schema:
+   *             type : string
+   *             format: byte
+   *             minimum: 1
+   *     responses:
+   *             200:
+   *                 content:
+   *                     application/json:
+   *                        schema:
+   *                            $ref: '#/components/schemas/Product'
+   *             400:
+   *                 description: Application error
+   *             401:
+   *                 description: Not authorized
+   *             404:
+   *                 description: Step not found
+   */
 
     router.put('/:productID/step/:stepID/close/', auth.required, auth.isFarmAdmin, async (req,res) => {
 
@@ -112,7 +295,47 @@ module.exports = (options) => {
             res.status(400).send({'msg' : err.message})
         }
     })
-
+     /**
+   * @swagger
+   * /product/{productId}/step/{stepId}:
+   *   delete:
+   *     summary: Delete Product's Step
+   *     description: Delete a single product step
+   *     security:
+   *        - bearerAuth: []
+   *     tags: [ProductSteps]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *        - name: productId
+   *          in: path
+   *          required: true
+   *          description: Product id string
+   *          schema:
+   *             type : string
+   *             format: byte
+   *             minimum: 1
+   *        - name: stepId
+   *          in: path
+   *          required: true
+   *          description: Step id string
+   *          schema:
+   *             type : string
+   *             format: byte
+   *             minimum: 1
+   *     responses:
+   *             200:
+   *                 content:
+   *                     application/json:
+   *                        schema:
+   *                            $ref: '#/components/schemas/Product'
+   *             400:
+   *                 description: Application error
+   *             401:
+   *                 description: Not authorized
+   *             404:
+   *                 description: Step not found
+   */
     router.delete('/:productID/step/:stepID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
             var step = await repo.getStep(req.params.productID,req.params.stepID)
