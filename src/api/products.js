@@ -674,7 +674,7 @@ module.exports = (options) => {
             }
             
             try{
-                var product = await repo.updateProductMedia(req.params.productID,mediaData)
+                var product = await repo.updateProduct(req.params.productID,mediaData)
                 product ?
                     res.status(status.OK).json(product)
                 :
@@ -852,7 +852,7 @@ module.exports = (options) => {
         }
 
         try{
-            var product = await repo.updateFarm(req.params.productID,productFarmData)
+            var product = await repo.updateProduct(req.params.productID,productFarmData)
             product ?
                 res.status(status.OK).json(product)
             :
@@ -931,7 +931,7 @@ module.exports = (options) => {
                         var rawProductsData={
                             rawProducts: rawProducts
                         }
-                        var product = await repo.updateProductRawProducts(req.params.productID,rawProductsData)
+                        var product = await repo.updateProduct(req.params.productID,rawProductsData)
                         product ?
                             res.status(status.OK).json(product)
                         :

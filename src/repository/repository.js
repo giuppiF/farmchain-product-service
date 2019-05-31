@@ -52,14 +52,14 @@ const repository = () => {
     }
   }
 
-  const updateLots = async (id, productBody) => {
+  /*const updateLots = async (id, productBody) => {
     try{
       let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
       return product
     } catch (error) {
       throw Error(error)
     }
-  }
+  }*/
 
   const updateLot= async (productId, lotId, lotData) => {
     try {
@@ -86,14 +86,14 @@ const repository = () => {
     }
   }
 
-  const updateDealers = async (id, productBody) => {
+  /*const updateDealers = async (id, productBody) => {
     try{
       let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
       return product
     } catch (error) {
       throw Error(error)
     }
-  }
+  }*/
 
   const updateDealer= async (productId, dealerId, dealerData) => {
     try {
@@ -206,14 +206,14 @@ const repository = () => {
     }
   }
 
-  const updateProductMedia = async (productId, productBody) => {
+  /*const updateProductMedia = async (productId, productBody) => {
     try{
       let product = await Product.findByIdAndUpdate(productId,productBody,{new: true,runValidators: true})
       return product
     } catch (error) {
       throw Error(error)
     }
-  }
+  }*/
 
   const addStep = async (productId, step) => {
     try{
@@ -234,14 +234,14 @@ const repository = () => {
   }
 
 
-  const updateSteps = async (id, productBody) => {
+  /*const updateSteps = async (id, productBody) => {
     try{
       let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
       return product
     } catch (error) {
       throw Error(error)
     }
-  }
+  }*/
 
   const updateStep= async (productId, stepId, stepData) => {
     try {
@@ -281,22 +281,23 @@ const repository = () => {
     }
   }
 
-  const updateFarm = async (id, productBody) => {
+  /*const updateFarm = async (id, productBody) => {
     try{
       let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
       return product
     } catch (error) {
       throw Error(error)
     }
-  }
-  const updateProductRawProducts = async (productId, productBody) => {
+  }*/
+
+  /*const updateProductRawProducts = async (productId, productBody) => {
     try{
       let product = await Product.findByIdAndUpdate(productId,productBody,{new: true,runValidators: true})
       return product
     } catch (error) {
       throw Error(error)
     }
-  }
+  }*/
 
   const getExtra = async (productId,extraId) =>
   {
@@ -350,11 +351,9 @@ const repository = () => {
     getProduct,
     createProduct,
     updateProduct,
-    deleteProduct,
-    updateLots,
+    deleteProduct,    
     updateLot,
     deleteLot,
-    updateDealers,
     updateDealer,
     deleteDealer,
     getProductTypes,
@@ -366,19 +365,22 @@ const repository = () => {
     updateMedia,
     getMedia,
     addMediasToProduct,
-    updateProductMedia,
-    updateProductRawProducts,
     addStep,
     getStep,
     updateStep,
-    updateSteps,
     updateStatusStep,
     deleteStep,
-    updateFarm,
     getExtra,
     addExtra,
     updateExtra,
     deleteExtra
+
+    //updateLots,
+    //updateProductMedia,
+    //updateProductRawProducts,
+    //updateSteps,
+    //updateFarm,
+    //updateDealers,
   })
 }
 

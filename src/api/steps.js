@@ -132,7 +132,7 @@ module.exports = (options) => {
             }
             
             try{
-                var product = await repo.updateSteps(req.params.productID,stepsData)
+                var product = await repo.updateProduct(req.params.productID,stepsData)
                 product ?
                     res.status(status.OK).json(product)
                 :

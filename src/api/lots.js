@@ -64,7 +64,7 @@ module.exports = (options) => {
             }
             
             try{
-                var product = await repo.updateLots(req.params.productID,lotsData)
+                var product = await repo.updateProduct(req.params.productID,lotsData)
                 product ?
                     res.status(status.OK).json(product)
                 :

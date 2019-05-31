@@ -63,7 +63,7 @@ module.exports = (options) => {
             }
             
             try{
-                var product = await repo.updateDealers(req.params.productID,dealersData)
+                var product = await repo.updateProduct(req.params.productID,dealersData)
                 product ?
                     res.status(status.OK).json(product)
                 :
