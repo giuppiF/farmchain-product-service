@@ -141,6 +141,134 @@ module.exports = (options) => {
     })
      /**
    * @swagger
+   * /product/media/step:
+   *   post:
+   *     summary: Create Media 
+   *     description: API for media creation
+   *     tags: [Media]
+   *     security:
+   *        - bearerAuth: []
+   *     produces:
+   *       - application/json
+   *     requestBody:
+   *        content:
+   *            multipart/form-data:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 product:
+   *                   name: ProductId
+   *                   type: string
+   *                 step:
+   *                   name: StepId
+   *                   type: string
+   *                 media:
+   *                   name: Media
+   *                   type: array
+   *                   items:
+   *                       type: string
+   *                       format: binary
+   *                 geolocal:
+   *                   name: Geolocal
+   *                   type: object
+   *                   properties:
+   *                     timestamp:
+   *                       name: Timestamp
+   *                       type: string
+   *                     coords:
+   *                       name: Coordinates
+   *                       type: object
+   *                       properties:
+   *                          latitude:
+   *                            name: Latitude
+   *                            type: string
+   *                          longitude:
+   *                            name: Longitude
+   *                            type: string
+   *     responses:
+   *             200:
+   *                 description: Product object
+   *                 content:
+   *                     application/json:
+   *                        schema:
+   *                            $ref: '#/components/schemas/Product'
+   *             400:
+   *                 description: Steps not updated for a validation error
+   *             401:
+   *                 description: Not authorized
+   *             404:
+   *                 description: Steps not updated for a generic database error
+   *                            
+   */
+
+  router.post('/step', async (req,res) => {
+    try{
+
+        var medias = []
+        var mediaFiles = []
+
+        if(!Array.isArray(req.files.media))
+            mediaFiles.push(req.files.media)
+        else    
+            mediaFiles = req.files.media
+        var productId = req.body.product
+        var stepId = req.body.step
+        
+        var geolocal = JSON.parse(req.body.geolocal)
+        var loadMedia = mediaFiles.map( async (mediaFile)=> {
+            const mediaData = {
+                timestamp: geolocal.timestamp,
+                location: {
+                    longitude: geolocal.coords.longitude,
+                    latitude: geolocal.coords.latitude
+                }
+            }
+
+
+            var media = await repo.createMedia(mediaData)
+            mediaData._id = media._id
+            try{
+                
+                var filename = Date.now()+ '-' + mediaFile.originalFilename
+                filename = filename.replace('mp4','MP4')
+                var pathname = path.join(req.originalUrl, media._id.toString())
+                var completePath = path.join(storagePath,pathname)
+                var uploadfile = await storageService.saveToDir(mediaFile.path, filename, completePath )
+                media.src= path.join(pathname,filename)
+                var smartContract = await blockchainService.createMediaSmartContract()
+                media.smartContract = smartContract
+                media.save()
+                medias.push(media)
+
+                
+            }catch (err) {
+                res.status(400).json({msg: err.message})
+            }
+        })
+
+        Promise.all(loadMedia).then( async ()=>{
+            try{
+                var updatedProductMedia = await repo.addMediasToProduct(productId,  medias)
+                var stepData = {
+                    media: medias
+                }
+                var updateStep = await repo.updateStep(productId,stepId,stepData)
+                res.status(status.OK).json(updatedProductMedia)
+
+
+
+                
+            }catch (err) {
+                res.status(400).json({msg: err.message})
+            }
+        })
+    } catch (err) {
+        res.status(400).json({msg: err.message})
+    }
+
+})
+     /**
+   * @swagger
    * /product/media/{mediaId}/base64:
    *   get:
    *     summary: Get Media Base64
