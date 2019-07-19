@@ -252,7 +252,10 @@ module.exports = (options) => {
                 var stepData = {
                     media: medias
                 }
-                var updateStep = await repo.updateStep(productId,stepId,stepData)
+                var step = await repo.getStep(productId,stepId)
+                step.media.push(...medias)
+
+                var updateStep = await repo.updateMedia(productId,stepId,step)
                 res.status(status.OK).json(updatedProductMedia)
 
 
