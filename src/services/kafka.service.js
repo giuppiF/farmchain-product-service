@@ -86,10 +86,14 @@ const deleteLot = async (repo,lot) => {
 const kafkaService = (options, producer,client) => {
   var repo = options.repo;
   try {
-    const Consumer = kafka.Consumer;
-    var kafkaOptions = { topic: 'service.product', partition: 0 }
+    const Consumer = kafka.Consumer,
+    var kafkaOptions = [{ topic: 'service.product', partition: 0 }]
     var kafkaConsumerOptions =  {
-      autoCommit: false
+      autoCommit: true,
+      fetchMaxWaitMs: 1000,
+      fetchMaxBytes: 1024 * 1024,
+      encoding: 'utf8',
+      fromOffset: false
     };
   
   let consumer = new Consumer(
