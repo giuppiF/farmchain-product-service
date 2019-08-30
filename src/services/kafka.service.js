@@ -89,11 +89,7 @@ const kafkaService = (options, producer,client) => {
     const Consumer = kafka.Consumer;
     var kafkaOptions = { topic: 'service.product', partition: 0 }
     var kafkaConsumerOptions =  {
-      autoCommit: true,
-      fetchMaxWaitMs: 1000,
-      fetchMaxBytes: 1024 * 1024,
-      encoding: 'utf8',
-      fromOffset: false
+      autoCommit: false
     };
   
   let consumer = new Consumer(
