@@ -86,7 +86,7 @@ const deleteLot = async (repo,lot) => {
 const kafkaService = (options, producer,client) => {
   var repo = options.repo;
   try {
-    const Consumer = kafka.HighLevelConsumer;
+    const Consumer = kafka.Consumer;
     var kafkaOptions = { topic: 'service.product', partition: 0 }
     var kafkaConsumerOptions =  {
       autoCommit: true,
