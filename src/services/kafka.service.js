@@ -153,7 +153,6 @@ const kafkaService = (options, producer) => {
         {
           topic: topic,
           messages: JSON.stringify({event: event, data: data}),
-          partition: 0,
           key: data._id
         }
       ];
