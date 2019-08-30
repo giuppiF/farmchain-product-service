@@ -61,7 +61,19 @@ const repository = () => {
     }
   }*/
 
-  const updateLot= async (productId, lotId, lotData) => {
+  const updateLot= async ( lotId, lotData) => {
+    try {
+      let product = await Product.findOneAndUpdate(
+        {"lots._id" : lotId}, 
+        { "lots.$" : lotData }, 
+        { new: true,runValidators: true })
+
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+  const updateProductLot= async (productId, lotId, lotData) => {
     try {
       let product = await Product.findOneAndUpdate(
         {_id: productId, "lots._id" : lotId}, 
@@ -74,7 +86,18 @@ const repository = () => {
     }
   }
 
-  const deleteLot = async (productId, lotId) => {
+  const deleteLot = async ( lotId) => {
+    try{
+      let product = await Product.findOneAndUpdate(
+        {"lots._id" : lotId},
+        {$pull: {lots: {_id: lotId }}},
+        { new: true,runValidators: true })
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+  const deleteProductLot = async (productId, lotId) => {
     try{
       let product = await Product.findOneAndUpdate(
         {_id: productId, "lots._id" : lotId},
@@ -86,16 +109,19 @@ const repository = () => {
     }
   }
 
-  /*const updateDealers = async (id, productBody) => {
-    try{
-      let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
+  const updateDealer= async ( dealerId, dealerData) => {
+    try {
+      let product = await Product.findOneAndUpdate(
+        { "dealers._id" : dealerId}, 
+        { "dealers.$" : dealerData }, 
+        { new: true,runValidators: true })
+
       return product
-    } catch (error) {
+    } catch (error){
       throw Error(error)
     }
-  }*/
-
-  const updateDealer= async (productId, dealerId, dealerData) => {
+  }
+  const updateProductDealer= async (productId, dealerId, dealerData) => {
     try {
       let product = await Product.findOneAndUpdate(
         {_id: productId, "dealers._id" : dealerId}, 
@@ -108,7 +134,18 @@ const repository = () => {
     }
   }
 
-  const deleteDealer = async (productId, dealerId) => {
+  const deleteDealer = async (dealerId) => {
+    try{
+      let product = await Product.findOneAndUpdate(
+        { "dealers._id" : dealerId},
+        {$pull: {dealers: {_id: dealerId }}},
+        { new: true,runValidators: true })
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+  const deleteProductDealer = async (productId, dealerId) => {
     try{
       let product = await Product.findOneAndUpdate(
         {_id: productId, "dealers._id" : dealerId},
@@ -353,9 +390,13 @@ const repository = () => {
     updateProduct,
     deleteProduct,    
     updateLot,
+    updateProductLot,
     deleteLot,
+    deleteProductLot,
     updateDealer,
+    updateProductDealer,
     deleteDealer,
+    deleteProductDealer,
     getProductTypes,
     getProductType,
     createProductType,

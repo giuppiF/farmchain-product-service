@@ -41,6 +41,12 @@ const constants = {
     }
 }
 const host = 'http://product:' + serverSettings.port
+
+const kafkaSettings = {
+    server: process.env.KAFKA_HOST + ':' + process.env.KAFKA_PORT,
+  };
+
+
 const swaggerOptions = {
     swaggerDefinition: {
       openapi: '3.0.0',
@@ -62,4 +68,8 @@ const authSettings = {
     JWTSecret: process.env.JWT_SECRET
 }
 
-module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants, authSettings,swaggerOptions})
+const awsSettings = {
+    s3BucketName:  process.env.AWS_S3_BUCKET_NAME,
+  }
+
+module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants, authSettings,swaggerOptions,kafkaSettings,awsSettings})

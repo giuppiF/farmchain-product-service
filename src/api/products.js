@@ -307,9 +307,8 @@ module.exports = (options) => {
                 var parts = image.split('/');
                 var filename = Date.now()+ '-' +parts[parts.length - 1]
                 var pathname = path.join( req.originalUrl, product._id.toString())
-                var completePath = path.join(storagePath,pathname)
-                var templateFile =  path.join(storagePath,image)
-                var uploadfile = await storageService.copyTemplateFile(templateFile, filename, completePath )
+                var templateFile =  image
+                var uploadfile = await storageService.copyTemplateFile(templateFile, filename, pathname )
                 product.image = path.join(pathname, filename)
                 product.save()
             }
@@ -318,25 +317,13 @@ module.exports = (options) => {
             return
         }
         
-        var lightProductData= {
-            _id: product._id,
-            name: product.name,
-            image: product.image,
-            category: product.category,
-            updatedAt: product.updatedAt,
-            status: product.status
-        }
 
         try{
-            const { headers: { authorization } } = req;
-            var farm = await farmService.addProductToFarm(product.farm._id,lightProductData,authorization)
-            if(farm)
-                res.status(status.OK).json(product)
-            else
-            {
-                res.status(404).send()
-                product.remove()
-            }
+
+            var publishEvent =await options.kafkaService.publishEvent("service.product","create.product",product);
+
+            res.status(status.OK).json(product)
+
 
             var smartContract = await blockchainService.createProductSmartContract()
             if(smartContract){
@@ -518,45 +505,30 @@ module.exports = (options) => {
             updatedAt: Date.now(),
             expiration: req.body.expiration
         }
-        var farmProductData= {
-            _id: req.params.productID,
-            name: req.body.name,
-            image: req.body.image,
-            updatedAt: Date.now()
-        }
         try{
 
             if(req.files.image){
                 
                 var pathname = req.originalUrl
-                var completePathname = path.join(storagePath, pathname)
+                
                 var product = await repo.getProduct(req.params.productID)
                 if(product.image)
-                    var deleteFile = await storageService.deleteFile(product.image,storagePath)            
+                    var deleteFile = await storageService.deleteFileFromS3(product.image)            
 
                 var image = req.files.image    
                 var filename = Date.now()+ '-' + image.originalFilename
                 
-                var uploadfile = await storageService.saveToDir(image.path, filename, completePathname )
+                var uploadfile = await storageService.uploadFileInS3(image.path, filename, pathname )
                 productData.image = path.join(pathname,filename)
-                farmProductData.image=  path.join(pathname,filename)
 
             }else{
                 productData.image=req.body.image
-                farmProductData.image=req.body.image
             }
 
 
             var product = await repo.updateProduct(req.params.productID,productData)
             
-            farmProductData.status = product.status
-            farmProductData.category = product.category
-            const { headers: { authorization } } = req;
-            var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData,authorization)
-            if(!farm){
-                res.status(404).send()
-                return;
-            }
+            var publishEvent =await options.kafkaService.publishEvent("service.product","update.product",product);
 
             product ?
                 res.status(status.OK).json(product)
@@ -608,8 +580,8 @@ module.exports = (options) => {
                 return
             }
             const { headers: { authorization } } = req;
-            var farm = await farmService.deleteProductToFarm(product.farm._id,product._id,authorization)
-            farm ?
+            var publishEvent =await options.kafkaService.publishEvent("service.product","delete.product",product);
+            product ?
                 res.status(status.OK).json(product)             
             :
                 res.status(404).send()
@@ -732,9 +704,8 @@ module.exports = (options) => {
                 var qrcodeBase64String = await QRCode.toDataURL(product.labelUrl)
                 let qrcodeBase64Image = qrcodeBase64String.split(';base64,').pop();
                 var pathname = path.join( '/product', product._id.toString())
-                var completePath = path.join(storagePath,pathname)
                 var qrcodeFileName='qrcode.png'
-                var generateQRCODE = await storageService.saveBase64ToDir(qrcodeBase64Image,qrcodeFileName,completePath)
+                var generateQRCODE = await storageService.saveBase64ToS3(qrcodeBase64Image,qrcodeFileName,pathname)
                 product.qrcode.base64 = qrcodeBase64String
                 product.qrcode.src = path.join(pathname,qrcodeFileName)
                 product.flyer = await advService.singleProductFlyer(product)

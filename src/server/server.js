@@ -44,7 +44,7 @@ const start  = (options) => {
             reject(new Error('Something went wrong!, err:' + err))
             res.status(500).send('Something went wrong!, err: ' + err)
         })
-morganBody(app,{skip:function (req, res) { return res.statusCode < 400 }})
+        morganBody(app,{skip:function (req, res) { return res.statusCode < 400 }})
         const productApi = require('../api/products')(options)
         const productTypesApi = require('../api/types')(options)
         const productLotApi = require('../api/lots')(options)
@@ -61,6 +61,8 @@ morganBody(app,{skip:function (req, res) { return res.statusCode < 400 }})
         
         app.use('/product/',productStepsApi)
         
+
+
 
 
         app.use(express.static(options.storagePath));

@@ -4,7 +4,7 @@ const router = require('express').Router();
 const path = require('path')
 
 module.exports = (options) => {
-    const {repo, storageService, storagePath, productService, auth} = options
+    const {repo, storageService,  productService, auth} = options
 
     router.post('/:productID/extra', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
@@ -24,8 +24,8 @@ module.exports = (options) => {
     
                 var filename = Date.now()+ '-' + image.originalFilename
                 var pathname = path.join(req.originalUrl, extra._id.toString())
-                var completePathname = path.join(storagePath, pathname)
-                var uploadfile = await storageService.saveToDir(image.path, filename, completePathname )
+                
+                var uploadfile = await storageService.uploadFileInS3(image.path, filename, pathname )
                 extraData.image = path.join(pathname, filename)
             }
             
@@ -52,15 +52,15 @@ module.exports = (options) => {
             if(req.files.image){
                 
                 var pathname = req.originalUrl
-                var completePathname = path.join(storagePath, pathname)
+
                 var extra = await repo.getExtra(req.params.productID,req.params.extraID)
                 if(extra.image)
-                    var deleteFile = await storageService.deleteFile(extra.image,storagePath)            
+                    var deleteFile = await storageService.deleteFileFromS3(extra.image)            
 
                 var image = req.files.image    
                 var filename = Date.now()+ '-' + image.originalFilename
                 
-                var uploadfile = await storageService.saveToDir(image.path, filename, completePathname )
+                var uploadfile = await storageService.uploadFileInS3(image.path, filename, pathname )
                 extraData.image = path.join(pathname,filename)
                 
 
@@ -83,11 +83,10 @@ module.exports = (options) => {
 
     router.delete('/:productID/extra/:extraID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
-            var pathname = path.join(storagePath, req.originalUrl)
+            var pathname = req.originalUrl
             var extra = await repo.getExtra(req.params.productID,req.params.extraID)
             if(extra.image){
-                var deleteFile = await storageService.deleteFile(extra.image,storagePath)  
-                var deleteDir = await storageService.deleteDir(pathname) 
+                var deleteFile = await storageService.deleteFileFromS3(extra.image)  
             }
                 
             var product = await repo.deleteExtra(req.params.productID,req.params.extraID)

@@ -135,7 +135,7 @@ module.exports = (options) => {
             image: req.body.image
         }
         try{
-            var product = await repo.updateLot(req.params.productID,lotData._id,lotData) 
+            var product = await repo.updateProductLot(req.params.productID,lotData._id,lotData) 
             product ?
                 res.status(status.OK).json(product)
             :            
@@ -187,7 +187,7 @@ module.exports = (options) => {
    */
     router.delete('/:productID/lot/:lotID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
-            var product = await repo.deleteLot(req.params.productID,req.params.lotID)
+            var product = await repo.deleteProductLot(req.params.productID,req.params.lotID)
             product ?
                 res.status(status.OK).json(product)
             :            

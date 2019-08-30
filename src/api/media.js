@@ -53,11 +53,11 @@ module.exports = (options) => {
    *                            type: string
    *     responses:
    *             200:
-   *                 description: Product object
+   *                 description: Medias object
    *                 content:
    *                     application/json:
    *                        schema:
-   *                            $ref: '#/components/schemas/Product'
+   *                            $ref: '#/components/schemas/Media'
    *             400:
    *                 description: Steps not updated for a validation error
    *             401:
@@ -102,8 +102,8 @@ module.exports = (options) => {
                     var filename = Date.now()+ '-' + mediaFile.originalFilename
                     filename = filename.replace('mp4','MP4')
                     var pathname = path.join(req.originalUrl, media._id.toString())
-                    var completePath = path.join(storagePath,pathname)
-                    var uploadfile = await storageService.saveToDir(mediaFile.path, filename, completePath )
+
+                    var uploadfile = await storageService.uploadFileInS3(mediaFile.path, filename, pathname )
                     media.src= path.join(pathname,filename)
                     var smartContract = await blockchainService.createMediaSmartContract()
                     media.smartContract = smartContract
@@ -232,8 +232,7 @@ module.exports = (options) => {
                 var filename = Date.now()+ '-' + mediaFile.originalFilename
                 filename = filename.replace('mp4','MP4')
                 var pathname = path.join(req.originalUrl, media._id.toString())
-                var completePath = path.join(storagePath,pathname)
-                var uploadfile = await storageService.saveToDir(mediaFile.path, filename, completePath )
+                var uploadfile = await storageService.uploadFileInS3(mediaFile.path, filename, pathname )
                 media.src= path.join(pathname,filename)
                 var smartContract = await blockchainService.createMediaSmartContract()
                 media.smartContract = smartContract
@@ -308,7 +307,7 @@ module.exports = (options) => {
         try{
             var media = await repo.getMedia(req.params.mediaId) 
             if(media){
-                var mediaBase64 = await storageService.fileToBase64(path.join(storagePath,media.src))
+                var mediaBase64 = await storageService.fileToBase64(media.src)
                 res.status(status.OK).json(mediaBase64)
             }else
                 res.status(404).json({msg: 'media not found'})
