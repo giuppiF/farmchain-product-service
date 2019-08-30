@@ -87,7 +87,7 @@ const kafkaService = (options, producer,client) => {
   var repo = options.repo;
   try {
     const Consumer = kafka.Consumer;
-    var kafkaOptions = [{ topic: 'service.product', partition: 0 }]
+    var kafkaOptions = [{ topic: 'service.farm', partition: 0 }]
     var kafkaConsumerOptions =  {
       autoCommit: true,
       fetchMaxWaitMs: 1000,
@@ -148,7 +148,7 @@ const kafkaService = (options, producer,client) => {
         if (err) {
           throw Error(err)
         } else {
-          console.log("pubblicato evento " + event + " in topic " + topic )
+          console.log("pubblicato evento " + event + " in topic " + topic + "with data : " + data )
           return;
         }
       });
