@@ -71,6 +71,7 @@ const storageService = (options) => {
       try{ 
         //configuring the AWS environment
         s3 = new AWS.S3();
+        console.log('/'+ options.awsSettings.s3BucketName + rawfile)
         var params = {
           Bucket: options.awsSettings.s3BucketName,
           Key:  filename.replace(/^\/+/g, ''),
