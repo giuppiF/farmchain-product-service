@@ -103,7 +103,7 @@ const storageService = (options) => {
       try{ 
         //configuring the AWS environment
         s3 = new AWS.S3();
-        buf = new Buffer.from(base64file,'base64')
+        buf = new Buffer(rawfile,'base64')
         var data = {
           Bucket: options.awsSettings.s3BucketName,
           Key: path.join(pathname.replace(/^\/+/g, ''),filename),
