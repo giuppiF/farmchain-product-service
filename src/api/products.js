@@ -712,7 +712,7 @@ module.exports = (options) => {
                 var generateQRCODE = await storageService.saveBase64ToS3(qrcodeBase64Image,qrcodeFileName,pathname)
                 product.qrcode.base64 = qrcodeBase64String
                 product.qrcode.src = path.join(pathname,qrcodeFileName)
-                product.flyer = await advService.singleProductFlyer(product)
+                //product.flyer = await advService.singleProductFlyer(product)
                 await product.save()
                 var farmProductData= {
                     _id: req.params.productID,
@@ -723,7 +723,8 @@ module.exports = (options) => {
                     category: product.category
                 }
                 const { headers: { authorization } } = req;
-                var farm = await farmService.updateProductToFarm(product.farm._id,farmProductData,authorization)
+                var publishEvent =await options.kafkaService.publishEvent("service.product","update.product",product);
+                
                 res.status(status.OK).json(product)
             }else
                 res.status(400).send({'msg': 'steps not completed'})

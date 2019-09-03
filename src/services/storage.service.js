@@ -135,7 +135,7 @@ const storageService = (options) => {
       Key:  filename.replace(/^\/+/g, '')
     }
     var file_buffer;
-    s3.client.getObject(params, function(error, data) {
+    s3.getObject(params, function(error, data) {
       file_buffer = data.Body.toString('base64');
     });
 
