@@ -1,5 +1,4 @@
 const express = require('express')
-const morgan = require('morgan')
 const morganBody = require('morgan-body')
 const helmet = require('helmet')
 const bodyParser = require('body-parser');

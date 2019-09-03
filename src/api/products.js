@@ -500,10 +500,8 @@ module.exports = (options) => {
         var productData = {
             _id: req.params.productID,
             name: req.body.name,
-            description: req.body.description,
             image: req.body.image,
-            updatedAt: Date.now(),
-            expiration: req.body.expiration
+            updatedAt: Date.now()
         }
         try{
 
@@ -525,6 +523,12 @@ module.exports = (options) => {
                 productData.image=req.body.image
             }
 
+            if(req.body.description){
+                productData.description = req.body.description;
+            }
+            if(req.body.expiration){
+                productData.expiration = req.body.expiration;
+            }
 
             var product = await repo.updateProduct(req.params.productID,productData)
             

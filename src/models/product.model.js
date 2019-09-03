@@ -500,7 +500,7 @@ var joiRawProductSchema = Joi.object({
    */
 var joiProductSchema = Joi.object({
     name: Joi.string().required(),
-    description: Joi.string(),
+    description: Joi.string().allow('').allow(null),
     image: Joi.string(),
     createdAt: Joi.date(),
     updatedAt: Joi.date(),
@@ -514,15 +514,15 @@ var joiProductSchema = Joi.object({
         websiteURL: Joi.string().allow('').allow(null),
         description: Joi.string().allow('').allow(null),
     }),
-    expiration: Joi.string(),
-    labelUrl: Joi.string().allow(''),
+    expiration: Joi.string().allow('').allow(null),
+    labelUrl: Joi.string().allow('').allow(null),
     qrcode: Joi.object().keys({
         src: Joi.string().allow(''),
         base64: Joi.string().allow('')
     }),
     status: Joi.string().valid('In Progress','Completed'),
     category: Joi.string().valid('Frutta','Verdura').required(),
-    smartContract: Joi.string(),
+    smartContract: Joi.string().allow('').allow(null),
     steps: Joi.array().items(joiStepSchema),
     extras: Joi.array().items(joiExtraSchema),
     dealers: Joi.array().items(joiDealerSchema),
