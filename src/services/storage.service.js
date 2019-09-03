@@ -102,9 +102,10 @@ const storageService = (options) => {
     return new Promise(function (resolve, reject) {
       try{ 
         //configuring the AWS environment
-        s3 = new AWS.S3( { params: {Bucket: options.awsSettings.s3BucketName} });
-        buf = new Buffer(base64file,'base64')
+        s3 = new AWS.S3();
+        buf = new Buffer.from(base64file,'base64')
         var data = {
+          Bucket: options.awsSettings.s3BucketName,
           Key: path.join(pathname.replace(/^\/+/g, ''),filename),
           Body: buf,
           ContentEncoding: 'base64',
@@ -128,7 +129,7 @@ const storageService = (options) => {
 
   const fileToBase64 =  async (filename) => {
     s3 = new AWS.S3();
-       
+      console.log("file to base 64 "+ filename);
     params = {
       Bucket: options.awsSettings.s3BucketName,
       Key:  filename.replace(/^\/+/g, '')
