@@ -76,14 +76,16 @@ const storageService = (options) => {
         console.log('/'+ options.awsSettings.s3BucketName + rawfile)
         var params = {
           Bucket: options.awsSettings.s3BucketName,
-          Key:  filename.replace(/^\/+/g, ''),
+          Key:  path.join(pathname.replace(/^\/+/g, ''),filename),
           CopySource : '/'+ options.awsSettings.s3BucketName + rawfile,
           ContentType: mime.getType(rawfile),
           ACL: 'public-read'
       };
       s3.copyObject(params, function(err, data) {
-          if (err)
+          if (err){
+            console.log("error in copying: " + err)
             reject(err);  // error
+          }
           else {
             resolve()      
           }
@@ -111,6 +113,7 @@ const storageService = (options) => {
         };
         s3.putObject(data, function(err, data){
             if (err) { 
+              console.log("error in save base64: " + err)
               reject(err)
             } else {
               resolve()
