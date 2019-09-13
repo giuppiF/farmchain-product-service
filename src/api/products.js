@@ -712,7 +712,7 @@ module.exports = (options) => {
                 var generateQRCODE = await storageService.saveBase64ToS3(qrcodeBase64Image,qrcodeFileName,pathname)
                 product.qrcode.base64 = qrcodeBase64String
                 product.qrcode.src = path.join(pathname,qrcodeFileName)
-                //product.flyer = await advService.singleProductFlyer(product)
+                product.flyer = await advService.singleProductFlyer(product)
                 await product.save()
                 var farmProductData= {
                     _id: req.params.productID,

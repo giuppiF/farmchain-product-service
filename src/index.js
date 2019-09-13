@@ -28,7 +28,8 @@ mediator.on('db.ready', async (db) => {
         repo: repo,
     })
     var advService = await services.advService.start({
-        storagePath: config.uploadServiceSettings.path
+        storagePath: config.uploadServiceSettings.path,
+        awsSettings: config.awsSettings
     })
  
     var auth = await config.authConfig.start({
