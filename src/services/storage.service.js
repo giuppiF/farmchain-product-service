@@ -130,7 +130,7 @@ const storageService = (options) => {
   const fileToBase64 =  async (filename) => {
     try {
       s3 = new AWS.S3();
-      console.log("file to base 64 "+ filename);
+
       params = {
         Bucket: options.awsSettings.s3BucketName,
         Key:  filename.replace(/^\/+/g, '')

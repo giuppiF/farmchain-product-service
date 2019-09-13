@@ -10,14 +10,27 @@ const advService = (options) => {
       try{
         var pathname = path.join('product',product._id.toString())
         var filename = 'flyer.pdf'
+        s3 = new AWS.S3();
+
+        params = {
+          Bucket: options.awsSettings.s3BucketName,
+          Key:  product.image.replace(/^\/+/g, '')
+        }
+  
+        const data = await s3.getObject(params).promise();
+  
+        var file_buffer = data.Body.toString('base64');
         
+        var imageBuffer = new Buffer(file_buffer, 'base64');
+
+
         const doc = new PDFDocument
 
         doc
           .fontSize(25)
           .text(product.name, 100, 100)
 
-        doc.image('https://media.farmchain.it' + product.image, {
+        doc.image(imageBuffer, {
             fit: [250, 300],
             align: 'left',
             valign: 'top'
