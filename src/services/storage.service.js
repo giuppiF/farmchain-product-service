@@ -136,10 +136,8 @@ const storageService = (options) => {
     }
     var file_buffer;
     s3.getObject(params, function(error, data) {
-      console.log('err');
-      console.log(error);
       console.log('data');
-      console.log(data);
+      console.log(data.Body);
       file_buffer = data.Body.toString('base64');
     });
 
