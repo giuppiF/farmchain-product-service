@@ -17,8 +17,6 @@ const authentication = (options) => {
   var  isFarmAdmin = async (req,res,next) => {
     var currentProduct = await repo.getProduct(req.params.productID)
     var farmId = req.user.farm
-    console.log(currentProduct)
-    console.log(req.user)
     farmId == currentProduct.farm._id?
       next()
     :
