@@ -128,23 +128,25 @@ const storageService = (options) => {
 
 
   const fileToBase64 =  async (filename) => {
-    s3 = new AWS.S3();
-    console.log("file to base 64 "+ filename);
-    params = {
-      Bucket: options.awsSettings.s3BucketName,
-      Key:  filename.replace(/^\/+/g, '')
-    }
-    var file_buffer;
-    s3.getObject(params, function(error, data) {
-      file_buffer = data.Body.toString('base64');
-      console.log('file buffer ');
-      console.log(file_buffer);
-    });
+    try {
+      s3 = new AWS.S3();
+      console.log("file to base 64 "+ filename);
+      params = {
+        Bucket: options.awsSettings.s3BucketName,
+        Key:  filename.replace(/^\/+/g, '')
+      }
 
-    var mimeType = mime.getType(filename)
-    var fileBase64 = 'data:' + mimeType + ';base64,'+ file_buffer
-    
-    return fileBase64
+      const data = await s3.getObject(params).promise();
+
+      var file_buffer = data.Body.toString('base64');
+      var mimeType = mime.getType(filename)
+      var fileBase64 = 'data:' + mimeType + ';base64,'+ file_buffer
+      
+      return fileBase64
+
+    } catch (err) {
+      throw  Error(err)
+    }
   }
 
 
