@@ -17,7 +17,7 @@ const advService = (options) => {
           .fontSize(25)
           .text(product.name, 100, 100)
 
-        doc.image(path.join('https://media.farmchain.it',product.image), {
+        doc.image(path.join('https:////media.farmchain.it',product.image), {
             fit: [250, 300],
             align: 'left',
             valign: 'top'
