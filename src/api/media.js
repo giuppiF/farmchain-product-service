@@ -67,7 +67,7 @@ module.exports = (options) => {
    *                            
    */
 
-    router.post('/', auth.required, auth.isFarmAdmin, async (req,res) => {
+    router.post('/', auth.required, auth.isFarmAdminMedia, async (req,res) => {
         try{
 
             var medias = []
@@ -201,7 +201,7 @@ module.exports = (options) => {
    *                            
    */
 
-  router.post('/step', auth.required, auth.isFarmAdmin,async (req,res) => {
+  router.post('/step', auth.required, auth.isFarmAdminMedia,async (req,res) => {
     try{
 
         var medias = []

@@ -24,7 +24,16 @@ const authentication = (options) => {
       res.status(401).send()
 
   }
+  var  isFarmAdminMedia = async (req,res,next) => {
+   
+    var farmId = req.user.farm
+    res.locals.farmId = farmId
+    farmId ?
+      next()
+    :
+      res.status(401).send()
 
+  }
   var isFarmAdminForCreation = (req,res,next) => {
     var farmId = req.user.farm
     res.locals.farmId = farmId
