@@ -17,7 +17,7 @@ const authentication = (options) => {
   var  isFarmAdmin = async (req,res,next) => {
     var currentProduct = await repo.getProduct(req.params.productID)
     var farmId = req.user.farm
-    req.locals.farmId = farmId
+    res.locals.farmId = farmId
     farmId == currentProduct.farm._id?
       next()
     :
@@ -27,7 +27,7 @@ const authentication = (options) => {
 
   var isFarmAdminForCreation = (req,res,next) => {
     var farmId = req.user.farm
-    req.locals.farmId = farmId
+    res.locals.farmId = farmId
     farmId == req.body.farm._id || farmId == req.body.farm ?
       next()
     :
