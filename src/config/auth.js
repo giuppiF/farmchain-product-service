@@ -57,6 +57,7 @@ const authentication = (options) => {
       credentialsRequired: false,
     }),
     isFarmAdmin,
+    isFarmAdminMedia,
     isFarmAdminForCreation
   };
 
