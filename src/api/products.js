@@ -306,7 +306,7 @@ module.exports = (options) => {
                 var image = req.body.image
                 var parts = image.split('/');
                 var filename = Date.now()+ '-' +parts[parts.length - 1]
-                var pathname = path.join( req.originalUrl, product._id.toString())
+                var pathname = path.join('/farm',req.locals.farmId.toString(), req.originalUrl, product._id.toString())
                 var templateFile =  image
                 var uploadfile = await storageService.copyTemplateFile(templateFile, filename, pathname )
                 product.image = path.join(pathname, filename)
@@ -507,8 +507,7 @@ module.exports = (options) => {
 
             if(req.files.image){
                 
-                var pathname = req.originalUrl
-                
+                var pathname = path.join('/farm',req.locals.farmId.toString(), req.originalUrl)
                 var product = await repo.getProduct(req.params.productID)
                 if(product.image)
                     var deleteFile = await storageService.deleteFileFromS3(product.image)            
@@ -707,7 +706,7 @@ module.exports = (options) => {
                 await product.save()
                 var qrcodeBase64String = await QRCode.toDataURL(product.labelUrl)
                 let qrcodeBase64Image = qrcodeBase64String.split(';base64,').pop();
-                var pathname = path.join( '/product', product._id.toString())
+                var pathname = path.join( '/farm',req.locals.farmId.toString(),'/product', product._id.toString())
                 var qrcodeFileName='qrcode.png'
                 var generateQRCODE = await storageService.saveBase64ToS3(qrcodeBase64Image,qrcodeFileName,pathname)
                 product.qrcode.base64 = qrcodeBase64String

@@ -4,7 +4,7 @@ const router = require('express').Router();
 const path = require('path')
 
 module.exports = (options) => {
-    const {repo, storagePath, storageService, blockchainService} = options
+    const {repo, storagePath, storageService, blockchainService, auth} = options
     
    /**
    * @swagger
@@ -67,7 +67,7 @@ module.exports = (options) => {
    *                            
    */
 
-    router.post('/', async (req,res) => {
+    router.post('/', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
 
             var medias = []
@@ -77,7 +77,7 @@ module.exports = (options) => {
                 mediaFiles.push(req.files.media)
             else    
                 mediaFiles = req.files.media
-            console.log(mediaFiles)
+
             if(!Array.isArray(req.body.products))
                 products.push(req.body.products)
             else    
@@ -101,7 +101,7 @@ module.exports = (options) => {
                     
                     var filename = Date.now()+ '-' + mediaFile.originalFilename
                     filename = filename.replace('mp4','MP4')
-                    var pathname = path.join(req.originalUrl, media._id.toString())
+                    var pathname = path.join('/farm',req.locals.farmId.toString(),req.originalUrl, media._id.toString())
 
                     var uploadfile = await storageService.uploadFileInS3(mediaFile.path, filename, pathname )
                     media.src= path.join(pathname,filename)
@@ -201,7 +201,7 @@ module.exports = (options) => {
    *                            
    */
 
-  router.post('/step', async (req,res) => {
+  router.post('/step', auth.required, auth.isFarmAdmin,async (req,res) => {
     try{
 
         var medias = []
@@ -231,7 +231,7 @@ module.exports = (options) => {
                 
                 var filename = Date.now()+ '-' + mediaFile.originalFilename
                 filename = filename.replace('mp4','MP4')
-                var pathname = path.join(req.originalUrl, media._id.toString())
+                var pathname = path.join('/farm',req.locals.farmId.toString(),req.originalUrl, media._id.toString())
                 var uploadfile = await storageService.uploadFileInS3(mediaFile.path, filename, pathname )
                 media.src= path.join(pathname,filename)
                 var smartContract = await blockchainService.createMediaSmartContract()

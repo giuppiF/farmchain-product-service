@@ -23,7 +23,7 @@ module.exports = (options) => {
                 var image = req.files.image
     
                 var filename = Date.now()+ '-' + image.originalFilename
-                var pathname = path.join(req.originalUrl, extra._id.toString())
+                var pathname = path.join('/farm',req.locals.farmId.toString(),req.originalUrl, extra._id.toString())
                 
                 var uploadfile = await storageService.uploadFileInS3(image.path, filename, pathname )
                 extraData.image = path.join(pathname, filename)
@@ -51,7 +51,7 @@ module.exports = (options) => {
         try{
             if(req.files.image){
                 
-                var pathname = req.originalUrl
+                var pathname = path.join('/farm',req.locals.farmId.toString(), req.originalUrl)
 
                 var extra = await repo.getExtra(req.params.productID,req.params.extraID)
                 if(extra.image)
@@ -83,7 +83,7 @@ module.exports = (options) => {
 
     router.delete('/:productID/extra/:extraID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
-            var pathname = req.originalUrl
+
             var extra = await repo.getExtra(req.params.productID,req.params.extraID)
             if(extra.image){
                 var deleteFile = await storageService.deleteFileFromS3(extra.image)  

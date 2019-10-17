@@ -8,7 +8,7 @@ const advService = (options) => {
 
   const singleProductFlyer = async (product) => {
       try{
-        var pathname = path.join('product',product._id.toString())
+        var pathname = path.join('/farm',product.farm._id.toString(),'product',product._id.toString())
         var filename = 'flyer.pdf'
         s3 = new AWS.S3();
 
@@ -60,7 +60,7 @@ const advService = (options) => {
         });
 
 
-         return path.join('/product',product._id.toString(),filename)
+         return path.join('/farm',product.farm._id.toString(),'/product',product._id.toString(),filename)
       } catch (err){
           throw  Error(err)
       }
