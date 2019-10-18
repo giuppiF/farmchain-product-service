@@ -49,12 +49,12 @@ const advService = (options) => {
         s3.upload(params, function (err, data) {
           //handle error
           if (err) {
-            reject(err)
+            throw Error(err)
           }
           //success
           if (data) {
               console.log("Uploaded in:", data.Location);
-              resolve(data.Location)
+
 
           }
         });
