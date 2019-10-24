@@ -63,10 +63,9 @@ const repository = () => {
 
   const updateLot= async ( lotId, lotData) => {
     try {
-      let product = await Product.findOneAndUpdate(
+      let product = await Product.updateMany(
         {"lots._id" : lotId}, 
-        { "lots.$" : lotData }, 
-        { new: true,runValidators: true })
+        { "lots.$" : lotData })
 
       return product
     } catch (error){

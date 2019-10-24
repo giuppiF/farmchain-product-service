@@ -56,10 +56,8 @@ const updateLot = async (repo,lot) => {
 
 
   try{
-      console.log('aggionro lotto')
-      console.log(lot)
       var product = await repo.updateLot(lot._id,lot)
-      product ?
+      product.acknowledged  ?
       console.log('okkkk')
       :
       console.log('error, product not found')
