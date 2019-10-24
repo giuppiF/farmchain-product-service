@@ -56,6 +56,8 @@ const updateLot = async (repo,lot) => {
 
 
   try{
+      console.log('aggionro lotto')
+      console.log(lot)
       var product = await repo.updateLot(lot._id,lot)
       product ?
       console.log('okkkk')
