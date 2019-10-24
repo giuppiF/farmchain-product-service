@@ -9,11 +9,11 @@ const updateFarm = async (repo,farm) => {
     const productFarmData = {
       farm: farm
     }
-    console.log(productFarmData)
+
     try{
         var product = await repo.updateProduct(product._id,productFarmData)
         product ?
-        console.log('okkkk')
+        console.log('Products updated')
         :
         console.log('error, product not found')
     } catch (err) {
@@ -30,7 +30,7 @@ const updateDealer = async (repo,dealer) => {
   try{
       var product = await repo.updateDealer(dealer._id,dealer)
       product.ok ?
-      console.log('okkkk')
+      console.log('Products\' dealer updated')
       :
       console.log('error, product not found')
   } catch (err) {
@@ -44,7 +44,7 @@ const deleteDealer = async (repo,dealer) => {
   try{
       var product = await repo.deleteDealer(dealer._id)
       product.ok ?
-      console.log('okkkk')
+      console.log('Products\' dealer deleted')
       :
       console.log('error, product not found')
   } catch (err) {
@@ -57,9 +57,9 @@ const updateLot = async (repo,lot) => {
 
   try{
       var product = await repo.updateLot(lot._id,lot)
-      console.log(product)
+      
       product.ok  ?
-      console.log('okkkk')
+      console.log('Products\' lot updated')
       :
       console.log('error, product not found')
   } catch (err) {
@@ -73,7 +73,7 @@ const deleteLot = async (repo,lot) => {
   try{
       var product = await repo.deleteLot(lot._id)
       product.ok ?
-      console.log('okkkk')
+      console.log('Products\' lot deleted')
       :
       console.log('error, product not found')
   } catch (err) {
