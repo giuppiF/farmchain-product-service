@@ -87,10 +87,9 @@ const repository = () => {
 
   const deleteLot = async ( lotId) => {
     try{
-      let product = await Product.findOneAndUpdate(
+      let product = await Product.updateMany(
         {"lots._id" : lotId},
-        {$pull: {lots: {_id: lotId }}},
-        { new: true,runValidators: true })
+        {$pull: {lots: {_id: lotId }}})
       return product
     } catch (error){
       throw Error(error)
@@ -110,10 +109,9 @@ const repository = () => {
 
   const updateDealer= async ( dealerId, dealerData) => {
     try {
-      let product = await Product.findOneAndUpdate(
+      let product = await Product.updateMany(
         { "dealers._id" : dealerId}, 
-        { "dealers.$" : dealerData }, 
-        { new: true,runValidators: true })
+        { "dealers.$" : dealerData })
 
       return product
     } catch (error){
@@ -135,10 +133,9 @@ const repository = () => {
 
   const deleteDealer = async (dealerId) => {
     try{
-      let product = await Product.findOneAndUpdate(
+      let product = await Product.updateMany(
         { "dealers._id" : dealerId},
-        {$pull: {dealers: {_id: dealerId }}},
-        { new: true,runValidators: true })
+        {$pull: {dealers: {_id: dealerId }}})
       return product
     } catch (error){
       throw Error(error)

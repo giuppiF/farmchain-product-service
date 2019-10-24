@@ -29,7 +29,7 @@ const updateDealer = async (repo,dealer) => {
 
   try{
       var product = await repo.updateDealer(dealer._id,dealer)
-      product ?
+      product.ok ?
       console.log('okkkk')
       :
       console.log('error, product not found')
@@ -43,7 +43,7 @@ const deleteDealer = async (repo,dealer) => {
 
   try{
       var product = await repo.deleteDealer(dealer._id)
-      product ?
+      product.ok ?
       console.log('okkkk')
       :
       console.log('error, product not found')
@@ -58,7 +58,7 @@ const updateLot = async (repo,lot) => {
   try{
       var product = await repo.updateLot(lot._id,lot)
       console.log(product)
-      product.acknowledged  ?
+      product.ok  ?
       console.log('okkkk')
       :
       console.log('error, product not found')
@@ -72,7 +72,7 @@ const deleteLot = async (repo,lot) => {
 
   try{
       var product = await repo.deleteLot(lot._id)
-      product ?
+      product.ok ?
       console.log('okkkk')
       :
       console.log('error, product not found')
