@@ -57,6 +57,7 @@ const updateLot = async (repo,lot) => {
 
   try{
       var product = await repo.updateLot(lot._id,lot)
+      console.log(product)
       product.acknowledged  ?
       console.log('okkkk')
       :
