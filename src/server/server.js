@@ -33,7 +33,7 @@ const start  = (options) => {
         app.use('/product/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
         // morgan gestisce il logging sul web server (formati dev, short ... )
-        //app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
+        app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
         
         app.use(formData.parse({
             uploadDir: options.storagePath,

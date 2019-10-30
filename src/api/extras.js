@@ -22,7 +22,7 @@ module.exports = (options) => {
             if(req.files.image){
                 var image = req.files.image
     
-                var filename = Date.now()+ '-' + image.originalFilename
+                var filename = extraData.title + Date.now()
                 var pathname = path.join('/farm',req.locals.farmId.toString(),req.originalUrl, extra._id.toString())
                 
                 var uploadfile = await storageService.uploadFileInS3(image.path, filename, pathname )
