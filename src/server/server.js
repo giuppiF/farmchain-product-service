@@ -34,7 +34,7 @@ const start  = (options) => {
         app.use('/product/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
         // morgan gestisce il logging sul web server (formati dev, short ... )
-        app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
+        //app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
         
         app.use(formData.parse({
             uploadDir: options.storagePath,
@@ -44,7 +44,7 @@ const start  = (options) => {
             reject(new Error('Something went wrong!, err:' + err))
             res.status(500).send('Something went wrong!, err: ' + err)
         })
-        //morganBody(app,{skip:function (req, res) { return res.statusCode < 400 }})
+        morganBody(app,{skip:function (req, res) { return res.statusCode < 400 }})
         const productApi = require('../api/products')(options)
         const productTypesApi = require('../api/types')(options)
         const productLotApi = require('../api/lots')(options)
