@@ -22,6 +22,7 @@ const storageService = (options) => {
         s3.upload(params, function (err, data) {
           //handle error
           if (err) {
+            console.log("Errore in upload");
             reject(err)
           }
           //success
