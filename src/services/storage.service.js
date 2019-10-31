@@ -33,6 +33,7 @@ const storageService = (options) => {
           }
         });
       } catch (err) {
+        console.log("Errore in upload");
         throw  Error(err)
       }
     });
@@ -63,6 +64,7 @@ const storageService = (options) => {
       
 
       } catch (err) {
+        console.log("file delete in error err")
         throw  Error(err)
       }
     });
@@ -94,6 +96,7 @@ const storageService = (options) => {
      
 
       } catch (err) {
+        console.log("error in copying: " + err)
         throw  Error(err)
       }
     });
@@ -122,6 +125,7 @@ const storageService = (options) => {
             }
         });
       } catch (err) {
+        console.log("error in save base64: " + err)
         throw  Error(err)
       }
     });
@@ -146,6 +150,7 @@ const storageService = (options) => {
       return fileBase64
 
     } catch (err) {
+      console.log("error in convert to base64: " + err)
       throw  Error(err)
     }
   }
