@@ -538,6 +538,7 @@ module.exports = (options) => {
             :
                 res.status(404).send()
          } catch (err) {
+            console.log("ERRORE UPDATE PRODUCT")
             res.status(400).send({'msg': err.message})
         }
 
@@ -728,6 +729,7 @@ module.exports = (options) => {
             }else
                 res.status(400).send({'msg': 'steps not completed'})
         } catch (err) {
+            console.log("ERRORE COMPLETE PRODUCT")
             res.status(400).send({'msg': err.message})
         }
 
