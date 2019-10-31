@@ -700,8 +700,9 @@ module.exports = (options) => {
         try{
             var product = await repo.getProduct(req.params.productID)
             var productCompleted= product.steps.every((step) => step.status === constants.step.status.completed)
-
-            if(productCompleted){
+           // if(product.status !== constants.product.status.completed){
+          //    res.status(status.OK).json({'msg': 'product already completed'})
+         if(productCompleted){
                 product.status = constants.product.status.completed
                 product.labelUrl= constants.product.labelUrl + product._id
                 await product.save()

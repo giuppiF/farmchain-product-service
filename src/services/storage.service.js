@@ -108,6 +108,7 @@ const storageService = (options) => {
         //configuring the AWS environment
         s3 = new AWS.S3();
         buf = new Buffer(rawfile,'base64')
+        console.log("trovato " + path.join(pathname.replace(/^\/+/g, ''),filename));
         var data = {
           Bucket: options.awsSettings.s3BucketName,
           Key: path.join(pathname.replace(/^\/+/g, ''),filename),
@@ -121,6 +122,7 @@ const storageService = (options) => {
               console.log("error in save base64: " + err)
               reject(err)
             } else {
+              console.log("success in save base64: " + path.join(pathname.replace(/^\/+/g, ''),filename))
               resolve()
             }
         });
