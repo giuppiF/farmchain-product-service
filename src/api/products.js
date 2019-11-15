@@ -706,7 +706,7 @@ module.exports = (options) => {
                 product.status = constants.product.status.completed
                 product.labelUrl= constants.product.labelUrl + product._id
                 await product.save()
-                var qrcodeBase64String = await QRCode.toDataURL(product.labelUrl)
+                var qrcodeBase64String = await QRCode.toDataURL(product.labelUrl,{width:1200})
                 let qrcodeBase64Image = qrcodeBase64String.split(';base64,').pop();
                 var pathname = path.join( '/farm',res.locals.farmId.toString(),'/product', product._id.toString())
                 var qrcodeFileName='qrcode.png'
