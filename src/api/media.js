@@ -2,6 +2,7 @@
 const status = require('http-status')
 const router = require('express').Router();
 const path = require('path')
+const mime = require('mime')
 
 module.exports = (options) => {
     const {repo, storagePath, storageService, blockchainService, auth} = options
@@ -100,9 +101,14 @@ module.exports = (options) => {
                 try{
                     
                     var filename = Date.now()+ '-' + mediaFile.originalFilename
+                    var fileMime = mime.getType(mediaFile.path);
+                    if(fileMime.includes('video'))
+                        media.type='video'
+                    else
+                        media.type='img'
+
                     filename = filename.replace('mp4','MP4')
                     var pathname = path.join('/farm',res.locals.farmId.toString(),req.originalUrl, media._id.toString())
-
                     var uploadfile = await storageService.uploadFileInS3(mediaFile.path, filename, pathname )
                     media.src= path.join(pathname,filename)
                     var smartContract = await blockchainService.createMediaSmartContract()
