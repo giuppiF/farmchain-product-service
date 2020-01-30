@@ -29,6 +29,20 @@ const Joi = require('joi');
    *         required: true
    *         type: string
    *         example: 2312312323
+   *       type:
+   *         name: type
+   *         description: Media type
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: 0x000000000
+   *       thumbnail:
+   *         name: type
+   *         description: Media thumbnail
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: video
    *       location:
    *         name: location
    *         description: Media location
@@ -62,6 +76,8 @@ var joiMediaSchema = Joi.object().keys({
     src: Joi.string(),
     smartContract: Joi.string(),
     timestamp: Joi.number(),
+    type: Joi.string().valid('video','img'),
+    thumbnail: Joi.string(),
     location: Joi.object().keys({
         longitude: Joi.number(),
         latitude: Joi.number()
