@@ -101,11 +101,6 @@ module.exports = (options) => {
                 try{
                     
                     var filename = Date.now()+ '-' + mediaFile.originalFilename
-                    var fileMime = mime.getType(mediaFile.path);
-                    if(fileMime.includes('video'))
-                        media.type='video'
-                    else
-                        media.type='img'
 
                     filename = filename.replace('mp4','MP4')
                     var pathname = path.join('/farm',res.locals.farmId.toString(),req.originalUrl, media._id.toString())
@@ -113,6 +108,12 @@ module.exports = (options) => {
                     media.src= path.join(pathname,filename)
                     var smartContract = await blockchainService.createMediaSmartContract()
                     media.smartContract = smartContract
+                    var fileMime = mime.getType(mediaFile.path);
+                    if(fileMime.includes('video'))
+                        media.type='video'
+                    else
+                        media.type='img'
+
                     media.save()
                     medias.push(media)
     
