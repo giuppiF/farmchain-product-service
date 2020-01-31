@@ -243,6 +243,14 @@ module.exports = (options) => {
                 media.src= path.join(pathname,filename)
                 var smartContract = await blockchainService.createMediaSmartContract()
                 media.smartContract = smartContract
+
+                var fileMime = mime.getType(mediaFile.path);
+                if(fileMime.includes('video'))
+                    media.type='video'
+                else
+                    media.type='img'
+
+                    
                 media.save()
                 medias.push(media)
 
