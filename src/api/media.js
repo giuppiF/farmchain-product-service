@@ -112,8 +112,8 @@ module.exports = (options) => {
                     if(fileMime.includes('video'))
                         media.type='video'
                     else
-                        media.type='img'
-
+                        media.type='image'
+                    media.muted = true
                     media.save()
                     medias.push(media)
     
@@ -248,9 +248,9 @@ module.exports = (options) => {
                 if(fileMime.includes('video'))
                     media.type='video'
                 else
-                    media.type='img'
+                    media.type='image'
 
-                    
+                media.muted = true    
                 media.save()
                 medias.push(media)
 

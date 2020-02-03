@@ -332,6 +332,45 @@ var joiRawProductSchema = Joi.object({
     smartContract: Joi.string(),
     steps: Joi.array().items(joiStepSchema)
 })
+
+ /**
+   * @swagger
+   * components:
+   *  schemas:
+   *   FarmMedia:
+   *     properties:
+   *       src:
+   *         name: src
+   *         description: Media src
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: /media/23423425
+   *       type:
+   *         name: type
+   *         description: Media type
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: 0x000000000
+   *       thumbnail:
+   *         name: type
+   *         description: Media thumbnail
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: video
+   *            
+   */
+
+  var joiMediaSchema = Joi.object().keys({
+    src: Joi.string(),
+    thumbnail: Joi.string(),
+    type: Joi.string().valid('video','image'),
+    muted: Joi.boolean().default(true)
+}) 
+
+
  /**
    * @swagger
    * components:
@@ -529,6 +568,7 @@ var joiProductSchema = Joi.object({
         logo: Joi.string().allow(''),
         websiteURL: Joi.string().allow('').allow(null),
         description: Joi.string().allow('').allow(null),
+        coverMedia: joiMediaSchema
     }),
     expiration: Joi.string().allow('').allow(null),
     labelUrl: Joi.string().allow('').allow(null),
@@ -545,7 +585,8 @@ var joiProductSchema = Joi.object({
     media: Joi.array().items(joiMediaSchema),
     lots: Joi.array().items(joiLotSchema),
     flyer: Joi.string().allow(''),
-    rawProducts: Joi.array().items(joiRawProductSchema)
+    rawProducts: Joi.array().items(joiRawProductSchema),
+    coverMedia: joiMediaSchema,
 })
 
 var mongooseProductSchema = new Mongoose.Schema(Joigoose.convert(joiProductSchema));
