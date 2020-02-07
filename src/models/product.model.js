@@ -572,6 +572,7 @@ var joiProductSchema = Joi.object({
     }),
     expiration: Joi.string().allow('').allow(null),
     labelUrl: Joi.string().allow('').allow(null),
+    socialLabelUrl: Joi.string().allow('').allow(null),
     qrcode: Joi.object().keys({
         src: Joi.string().allow(''),
         base64: Joi.string().allow('')

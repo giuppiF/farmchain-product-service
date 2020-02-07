@@ -37,7 +37,8 @@ const constants = {
             inprog: "In Progress",
             completed: "Completed"
         },
-        labelUrl: 'https://label.farmchain.it/?id='
+        labelUrl: 'https://label.farmchain.it/?id=',
+        socialLabelUrl: 'https://social-label.farmchain.it/?id='
     }
 }
 const host = 'http://product:' + serverSettings.port
