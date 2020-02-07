@@ -363,7 +363,7 @@ var joiRawProductSchema = Joi.object({
    *            
    */
 
-  var joiMediaSchema = Joi.object().keys({
+  var joiCoverMediaSchema = Joi.object().keys({
     src: Joi.string(),
     thumbnail: Joi.string(),
     type: Joi.string().valid('video','image'),
@@ -568,7 +568,7 @@ var joiProductSchema = Joi.object({
         logo: Joi.string().allow(''),
         websiteURL: Joi.string().allow('').allow(null),
         description: Joi.string().allow('').allow(null),
-        coverMedia: joiMediaSchema
+        coverMedia: joiCoverMediaSchema
     }),
     expiration: Joi.string().allow('').allow(null),
     labelUrl: Joi.string().allow('').allow(null),
@@ -587,7 +587,7 @@ var joiProductSchema = Joi.object({
     lots: Joi.array().items(joiLotSchema),
     flyer: Joi.string().allow(''),
     rawProducts: Joi.array().items(joiRawProductSchema),
-    coverMedia: joiMediaSchema,
+    coverMedia: joiCoverMediaSchema,
 })
 
 var mongooseProductSchema = new Mongoose.Schema(Joigoose.convert(joiProductSchema));
