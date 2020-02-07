@@ -76,7 +76,7 @@ var joiMediaSchema = Joi.object().keys({
     src: Joi.string(),
     smartContract: Joi.string(),
     timestamp: Joi.number(),
-    type: Joi.string().valid('video','img'),
+    type: Joi.string().valid('video','image'),
     thumbnail: Joi.string(),
     location: Joi.object().keys({
         longitude: Joi.number(),
