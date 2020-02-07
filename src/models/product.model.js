@@ -78,6 +78,7 @@ var joiMediaSchema = Joi.object().keys({
     timestamp: Joi.number(),
     type: Joi.string().valid('video','image'),
     thumbnail: Joi.string(),
+    muted: Joi.boolean().default(true),
     location: Joi.object().keys({
         longitude: Joi.number(),
         latitude: Joi.number()
