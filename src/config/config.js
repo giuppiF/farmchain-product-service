@@ -73,4 +73,8 @@ const awsSettings = {
     s3BucketName:  process.env.AWS_S3_BUCKET_NAME,
   }
 
-module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants, authSettings,swaggerOptions,kafkaSettings,awsSettings})
+
+  const googleApiSettings = {
+    mapsApiKey:  'AIzaSyDw6FuU8rF_tigMAHPooPWxn8MbqwGnDIc',
+  }
+module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants, authSettings,swaggerOptions,kafkaSettings,awsSettings,googleApiSettings})

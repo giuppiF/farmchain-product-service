@@ -81,7 +81,8 @@ var joiMediaSchema = Joi.object().keys({
     muted: Joi.boolean().default(true),
     location: Joi.object().keys({
         longitude: Joi.number(),
-        latitude: Joi.number()
+        latitude: Joi.number(),
+        address:  Joi.string()
     }),
     base64: Joi.string()
 })  

@@ -17,12 +17,13 @@ mediator.on('db.ready', async (db) => {
     var blockhainService = await services.blockchainService.start({
         host: config.bcServiceSettings.host,
         port: config.bcServiceSettings.port
-    })
+    }) 
 
     
     var storageService = await services.storageService.start({
         awsSettings: config.awsSettings
     })
+
     var kafkaService = await services.kafkaService.start({
         kafkaSettings: config.kafkaSettings,
         repo: repo,
@@ -50,6 +51,7 @@ mediator.on('db.ready', async (db) => {
         auth: auth,
         swaggerOptions: config.swaggerOptions,
         kafkaSettings: config.kafkaSettings,
+        googleApiSettings: config.googleApiSettings
 
     })
 

@@ -3,9 +3,10 @@ const status = require('http-status')
 const router = require('express').Router();
 const path = require('path')
 const mime = require('mime')
+var NodeGeocoder = require('node-geocoder');
 
 module.exports = (options) => {
-    const {repo, storagePath, storageService, blockchainService, auth} = options
+    const {repo, storagePath, storageService, blockchainService, auth, googleApiSettings} = options
     
    /**
    * @swagger
@@ -69,8 +70,8 @@ module.exports = (options) => {
    */
 
     router.post('/', auth.required, auth.isFarmAdminMedia, async (req,res) => {
-        try{
-
+        try{      
+           
             var medias = []
             var mediaFiles = []
             var products = []
@@ -84,18 +85,36 @@ module.exports = (options) => {
             else    
                 products =req.body.products
 
-            
+           
             var geolocal = JSON.parse(req.body.geolocal)
-            var loadMedia = mediaFiles.map( async (mediaFile)=> {
+ 
+            var geolocalOptions = {
+                provider: 'google',
+              
+                // Optional depending on the providers
+                httpAdapter: 'https', // Default
+                apiKey: googleApiSettings.mapsApiKey, // for Mapquest, OpenCage, Google Premier
+                formatter: null         // 'gpx', 'string', ...
+              };
+
+      
+            var geocoder = NodeGeocoder(geolocalOptions);
+            var mapsAddress
+            await geocoder.reverse({lat: geolocal.coords.latitude, lon: geolocal.coords.longitude}, function(err, res) {
+                err ? console.log(err) : mapsAddress= res[0].formattedAddress
+              });
+            var loadMedia = mediaFiles.map( async (mediaFile,)=> {
+
                 const mediaData = {
                     timestamp: geolocal.timestamp,
                     location: {
                         longitude: geolocal.coords.longitude,
-                        latitude: geolocal.coords.latitude
+                        latitude: geolocal.coords.latitude,
+                        address: mapsAddress
                     }
-                }
+                } 
 
-    
+                console.log(mediaData)
                 var media = await repo.createMedia(mediaData)
                 mediaData._id = media._id
                 try{
@@ -222,12 +241,31 @@ module.exports = (options) => {
         var stepId = req.body.step
         
         var geolocal = JSON.parse(req.body.geolocal)
+
+        var geolocalOptions = {
+            provider: 'google',
+          
+            // Optional depending on the providers
+            httpAdapter: 'https', // Default
+            apiKey: googleApiSettings.mapsApiKey, // for Mapquest, OpenCage, Google Premier
+            formatter: null         // 'gpx', 'string', ...
+          };
+
+  
+        var geocoder = NodeGeocoder(geolocalOptions);
+        var mapsAddress
+        await geocoder.reverse({lat: geolocal.coords.latitude, lon: geolocal.coords.longitude}, function(err, res) {
+            err ? console.log(err) : mapsAddress= res[0].formattedAddress
+          });
+
+
         var loadMedia = mediaFiles.map( async (mediaFile)=> {
             const mediaData = {
                 timestamp: geolocal.timestamp,
                 location: {
                     longitude: geolocal.coords.longitude,
-                    latitude: geolocal.coords.latitude
+                    latitude: geolocal.coords.latitude,
+                    address: mapsAddress
                 }
             }
 

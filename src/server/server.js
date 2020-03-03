@@ -37,8 +37,7 @@ const start  = (options) => {
         //app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
         
         app.use(formData.parse({
-            uploadDir: options.storagePath,
-            autoClean: true
+            uploadDir: options.storagePath
         }));
         app.use((err,req,res,next) => {
             reject(new Error('Something went wrong!, err:' + err))
