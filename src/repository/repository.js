@@ -239,6 +239,40 @@ const repository = () => {
     }
   }
 
+  const updateProductMedia = async ( mediaId, mediaData) => {
+    try {
+      let product = await Product.updateMany(
+        {"media._id" : mediaId}, 
+        { "media.$" : mediaData })
+
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+  const updateProductStepMedia = async ( mediaId, mediaData) => {
+    try {
+      let products = await Product.find({"steps.media._id":mediaId}).then((docs) =>{
+        docs.forEach(function(doc,err){
+          doc.steps.map(function(step,err){step.media.map(
+              function(media,err){
+                  if(media._id.toString()==mediaId){
+                    media.smartContract = mediaData.smartContract
+                  }
+              })
+              
+          })
+          doc.save()
+        })
+      })
+
+      return true
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
+
   const addStep = async (productId, step) => {
     try{
       let product = await Product.findByIdAndUpdate(productId,{ $push: { steps: step }},{new: true,runValidators: true})
@@ -393,6 +427,8 @@ const repository = () => {
     updateMedia,
     getMedia,
     addMediasToProduct,
+    updateProductMedia,
+    updateProductStepMedia,
     addStep,
     getStep,
     updateStep,

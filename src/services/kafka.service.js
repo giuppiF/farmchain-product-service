@@ -73,10 +73,19 @@ const updateMedia = async (repo,media) => {
 
   try{
       var media = await repo.updateMedia(media._id,media)
-      console.log(media)
-      media ?
-      console.log('Media updated')
-      :
+      if(media){
+        var products = await repo.updateProductMedia(media._id,media) 
+        if(products.ok){
+          var productsStep = await repo.updateProductStepMedia(media._id,media) 
+          productsStep ?
+            console.log('Media updated')
+          :
+            console.log('error updating products\' steps')
+        
+          }else
+          console.log('error updating products\' media')
+      }else
+
       console.log('error, media not found')
   } catch (err) {
       console.log('error on db', err);
