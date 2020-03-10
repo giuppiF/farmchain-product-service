@@ -43,6 +43,13 @@ const Joi = require('joi');
    *         required: true
    *         type: string
    *         example: video
+   *       hash:
+   *         name: type
+   *         description: Media hash
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: video
    *       location:
    *         name: location
    *         description: Media location
@@ -84,7 +91,8 @@ var joiMediaSchema = Joi.object().keys({
         latitude: Joi.number(),
         address:  Joi.string()
     }),
-    base64: Joi.string()
+    base64: Joi.string(),
+    hash: Joi.string()
 })  
   /**
    * @swagger

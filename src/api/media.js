@@ -5,6 +5,7 @@ const path = require('path')
 const mime = require('mime')
 var NodeGeocoder = require('node-geocoder');
 
+
 module.exports = (options) => {
     const {repo, storagePath, storageService, blockchainService, auth, googleApiSettings} = options
     
@@ -99,10 +100,11 @@ module.exports = (options) => {
 
       
             var geocoder = NodeGeocoder(geolocalOptions);
-            var mapsAddress
+            var mapsAddress = 'Indirizzo non specificato'
             await geocoder.reverse({lat: geolocal.coords.latitude, lon: geolocal.coords.longitude}, function(err, res) {
                 err ? console.log(err) : mapsAddress= res[0].formattedAddress
-              });
+              })
+
             var loadMedia = mediaFiles.map( async (mediaFile,)=> {
 
                 const mediaData = {
@@ -114,7 +116,7 @@ module.exports = (options) => {
                     }
                 } 
 
-                console.log(mediaData)
+
                 var media = await repo.createMedia(mediaData)
                 mediaData._id = media._id
                 try{
@@ -125,8 +127,8 @@ module.exports = (options) => {
                     var pathname = path.join('/farm',res.locals.farmId.toString(),req.originalUrl, media._id.toString())
                     var uploadfile = await storageService.uploadFileInS3(mediaFile.path, filename, pathname )
                     media.src= path.join(pathname,filename)
-                    var smartContract = await blockchainService.createMediaSmartContract()
-                    media.smartContract = smartContract
+
+
                     var fileMime = mime.getType(mediaFile.path);
                     if(fileMime.includes('video'))
                         media.type='video'
@@ -134,6 +136,8 @@ module.exports = (options) => {
                         media.type='image'
                     media.muted = true
                     media.save()
+                    media.smartContract ="0x000000XXXXXXXXXXX"
+                    var publishEvent =await options.kafkaService.publishEvent("service.product","create.media",media);
                     medias.push(media)
     
                     
@@ -279,8 +283,6 @@ module.exports = (options) => {
                 var pathname = path.join('/farm',res.locals.farmId.toString(),req.originalUrl, media._id.toString())
                 var uploadfile = await storageService.uploadFileInS3(mediaFile.path, filename, pathname )
                 media.src= path.join(pathname,filename)
-                var smartContract = await blockchainService.createMediaSmartContract()
-                media.smartContract = smartContract
 
                 var fileMime = mime.getType(mediaFile.path);
                 if(fileMime.includes('video'))
@@ -289,6 +291,10 @@ module.exports = (options) => {
                     media.type='image'
 
                 media.muted = true    
+
+                media.smartContract ="0x000000XXXXXXXXXXX"
+                var publishEvent =await options.kafkaService.publishEvent("service.product","create.media",media);
+
                 media.save()
                 medias.push(media)
 

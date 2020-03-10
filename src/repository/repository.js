@@ -239,15 +239,6 @@ const repository = () => {
     }
   }
 
-  /*const updateProductMedia = async (productId, productBody) => {
-    try{
-      let product = await Product.findByIdAndUpdate(productId,productBody,{new: true,runValidators: true})
-      return product
-    } catch (error) {
-      throw Error(error)
-    }
-  }*/
-
   const addStep = async (productId, step) => {
     try{
       let product = await Product.findByIdAndUpdate(productId,{ $push: { steps: step }},{new: true,runValidators: true})

@@ -67,6 +67,24 @@ const updateLot = async (repo,lot) => {
   }
 
 }
+
+const updateMedia = async (repo,media) => {
+
+
+  try{
+      var media = await repo.updateMedia(media._id,media)
+      console.log(media)
+      media ?
+      console.log('Media updated')
+      :
+      console.log('error, media not found')
+  } catch (err) {
+      console.log('error on db', err);
+  }
+
+}
+
+
 const deleteLot = async (repo,lot) => {
 
 
@@ -88,7 +106,7 @@ const kafkaService = (options, producer,client) => {
   var repo = options.repo;
   try {
     const Consumer = kafka.Consumer;
-    var kafkaOptions = [{ topic: 'service.farm', partition: 0 }]
+    var kafkaOptions = [{ topic: 'service.farm', partition: 0 },{ topic: 'service.blockchain', partition: 0 }]
     var kafkaConsumerOptions =  {
       autoCommit: true,
       fetchMaxWaitMs: 1000,
@@ -104,7 +122,7 @@ const kafkaService = (options, producer,client) => {
     );
 
 
-    var farmFunctions = {
+    var listenerFunctions = {
       "update.farm" : (repo,farm) => {
           return updateFarm(repo, farm)
         },
@@ -120,13 +138,16 @@ const kafkaService = (options, producer,client) => {
       "delete.lot" : (repo,lot) => {
           return deleteLot(repo, lot)
         },
+      "create.blockchain" : (repo,media) => {
+        return updateMedia(repo, media)
+      },
 
     }
 
     consumer.on('message', async function(message) {
 
       var message_parsed = JSON.parse(message.value);
-      farmFunctions[message_parsed.event](repo,message_parsed.data)
+      listenerFunctions[message_parsed.event](repo,message_parsed.data)
 
     })
     consumer.on('error', function(err) {
