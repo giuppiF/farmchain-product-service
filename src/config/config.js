@@ -75,6 +75,6 @@ const awsSettings = {
 
 
   const googleApiSettings = {
-    mapsApiKey:  'AIzaSyDw6FuU8rF_tigMAHPooPWxn8MbqwGnDIc',
+    mapsApiKey:  process.env.GOOGLE_API_KEY,
   }
 module.exports = Object.assign({}, { dbSettings, serverSettings,farmServiceSettings, bcServiceSettings, uploadServiceSettings, constants, authSettings,swaggerOptions,kafkaSettings,awsSettings,googleApiSettings})
