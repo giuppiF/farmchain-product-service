@@ -1,7 +1,7 @@
 const express = require('express')
-const morgan = require('morgan')
-const morganBody = require('morgan-body')
 const helmet = require('helmet')
+const morganBody = require('morgan-body')
+const morgan = require('morgan')
 const bodyParser = require('body-parser');
 const formData = require("express-form-data");
 const cors = require('cors')
@@ -37,14 +37,13 @@ const start  = (options) => {
         //app.use(morgan(':method :url :status :res[content-length] :res[body] - :response-time ms'))
         
         app.use(formData.parse({
-            uploadDir: options.storagePath,
-            autoClean: true
+            uploadDir: options.storagePath
         }));
         app.use((err,req,res,next) => {
             reject(new Error('Something went wrong!, err:' + err))
             res.status(500).send('Something went wrong!, err: ' + err)
         })
-morganBody(app,{skip:function (req, res) { return res.statusCode < 400 }})
+        morganBody(app,{skip:function (req, res) { return res.statusCode < 400 }})
         const productApi = require('../api/products')(options)
         const productTypesApi = require('../api/types')(options)
         const productLotApi = require('../api/lots')(options)
@@ -61,6 +60,8 @@ morganBody(app,{skip:function (req, res) { return res.statusCode < 400 }})
         
         app.use('/product/',productStepsApi)
         
+
+
 
 
         app.use(express.static(options.storagePath));

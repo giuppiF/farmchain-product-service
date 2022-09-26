@@ -29,6 +29,27 @@ const Joi = require('joi');
    *         required: true
    *         type: string
    *         example: 2312312323
+   *       type:
+   *         name: type
+   *         description: Media type
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: 0x000000000
+   *       thumbnail:
+   *         name: type
+   *         description: Media thumbnail
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: video
+   *       hash:
+   *         name: type
+   *         description: Media hash
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: video
    *       location:
    *         name: location
    *         description: Media location
@@ -62,11 +83,16 @@ var joiMediaSchema = Joi.object().keys({
     src: Joi.string(),
     smartContract: Joi.string(),
     timestamp: Joi.number(),
+    type: Joi.string().valid('video','image'),
+    thumbnail: Joi.string(),
+    muted: Joi.boolean().default(true),
     location: Joi.object().keys({
         longitude: Joi.number(),
-        latitude: Joi.number()
+        latitude: Joi.number(),
+        address:  Joi.string()
     }),
-    base64: Joi.string()
+    base64: Joi.string(),
+    hash: Joi.string()
 })  
   /**
    * @swagger
@@ -316,6 +342,45 @@ var joiRawProductSchema = Joi.object({
     smartContract: Joi.string(),
     steps: Joi.array().items(joiStepSchema)
 })
+
+ /**
+   * @swagger
+   * components:
+   *  schemas:
+   *   FarmMedia:
+   *     properties:
+   *       src:
+   *         name: src
+   *         description: Media src
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: /media/23423425
+   *       type:
+   *         name: type
+   *         description: Media type
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: 0x000000000
+   *       thumbnail:
+   *         name: type
+   *         description: Media thumbnail
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         example: video
+   *            
+   */
+
+  var joiCoverMediaSchema = Joi.object().keys({
+    src: Joi.string(),
+    thumbnail: Joi.string(),
+    type: Joi.string().valid('video','image'),
+    muted: Joi.boolean().default(true)
+}) 
+
+
  /**
    * @swagger
    * components:
@@ -500,7 +565,7 @@ var joiRawProductSchema = Joi.object({
    */
 var joiProductSchema = Joi.object({
     name: Joi.string().required(),
-    description: Joi.string(),
+    description: Joi.string().allow('').allow(null),
     image: Joi.string(),
     createdAt: Joi.date(),
     updatedAt: Joi.date(),
@@ -510,26 +575,29 @@ var joiProductSchema = Joi.object({
         address: Joi.string().required(),
         mail: Joi.string().email().required(),
         phone: Joi.string().required(),
-        logo: Joi.string(),
-        websiteURL: Joi.string(),
-        description: Joi.string(),
+        logo: Joi.string().allow(''),
+        websiteURL: Joi.string().allow('').allow(null),
+        description: Joi.string().allow('').allow(null),
+        coverMedia: joiCoverMediaSchema
     }),
-    expiration: Joi.string(),
-    labelUrl: Joi.string().allow(''),
+    expiration: Joi.string().allow('').allow(null),
+    labelUrl: Joi.string().allow('').allow(null),
+    socialLabelUrl: Joi.string().allow('').allow(null),
     qrcode: Joi.object().keys({
         src: Joi.string().allow(''),
         base64: Joi.string().allow('')
     }),
     status: Joi.string().valid('In Progress','Completed'),
     category: Joi.string().valid('Frutta','Verdura').required(),
-    smartContract: Joi.string(),
+    smartContract: Joi.string().allow('').allow(null),
     steps: Joi.array().items(joiStepSchema),
     extras: Joi.array().items(joiExtraSchema),
     dealers: Joi.array().items(joiDealerSchema),
     media: Joi.array().items(joiMediaSchema),
     lots: Joi.array().items(joiLotSchema),
     flyer: Joi.string().allow(''),
-    rawProducts: Joi.array().items(joiRawProductSchema)
+    rawProducts: Joi.array().items(joiRawProductSchema),
+    coverMedia: joiCoverMediaSchema,
 })
 
 var mongooseProductSchema = new Mongoose.Schema(Joigoose.convert(joiProductSchema));

@@ -2,9 +2,12 @@
 const status = require('http-status')
 const router = require('express').Router();
 const path = require('path')
+const mime = require('mime')
+var NodeGeocoder = require('node-geocoder');
+
 
 module.exports = (options) => {
-    const {repo, storagePath, storageService, blockchainService} = options
+    const {repo, storagePath, storageService, blockchainService, auth, googleApiSettings} = options
     
    /**
    * @swagger
@@ -53,11 +56,11 @@ module.exports = (options) => {
    *                            type: string
    *     responses:
    *             200:
-   *                 description: Product object
+   *                 description: Medias object
    *                 content:
    *                     application/json:
    *                        schema:
-   *                            $ref: '#/components/schemas/Product'
+   *                            $ref: '#/components/schemas/Media'
    *             400:
    *                 description: Steps not updated for a validation error
    *             401:
@@ -67,9 +70,9 @@ module.exports = (options) => {
    *                            
    */
 
-    router.post('/', async (req,res) => {
-        try{
-
+    router.post('/', auth.required, auth.isFarmAdminMedia, async (req,res) => {
+        try{      
+           
             var medias = []
             var mediaFiles = []
             var products = []
@@ -77,37 +80,64 @@ module.exports = (options) => {
                 mediaFiles.push(req.files.media)
             else    
                 mediaFiles = req.files.media
-            console.log(mediaFiles)
+
             if(!Array.isArray(req.body.products))
                 products.push(req.body.products)
             else    
                 products =req.body.products
 
-            
+           
             var geolocal = JSON.parse(req.body.geolocal)
-            var loadMedia = mediaFiles.map( async (mediaFile)=> {
+ 
+            var geolocalOptions = {
+                provider: 'google',
+              
+                // Optional depending on the providers
+                httpAdapter: 'https', // Default
+                apiKey: googleApiSettings.mapsApiKey, // for Mapquest, OpenCage, Google Premier
+                formatter: null         // 'gpx', 'string', ...
+              };
+
+      
+            var geocoder = NodeGeocoder(geolocalOptions);
+            var mapsAddress = 'Indirizzo non specificato'
+            await geocoder.reverse({lat: geolocal.coords.latitude, lon: geolocal.coords.longitude}, function(err, res) {
+                err ? console.log(err) : mapsAddress= res[0].formattedAddress
+              })
+
+            var loadMedia = mediaFiles.map( async (mediaFile,)=> {
+
                 const mediaData = {
                     timestamp: geolocal.timestamp,
                     location: {
                         longitude: geolocal.coords.longitude,
-                        latitude: geolocal.coords.latitude
+                        latitude: geolocal.coords.latitude,
+                        address: mapsAddress
                     }
-                }
+                } 
 
-    
+
                 var media = await repo.createMedia(mediaData)
                 mediaData._id = media._id
                 try{
                     
                     var filename = Date.now()+ '-' + mediaFile.originalFilename
+
                     filename = filename.replace('mp4','MP4')
-                    var pathname = path.join(req.originalUrl, media._id.toString())
-                    var completePath = path.join(storagePath,pathname)
-                    var uploadfile = await storageService.saveToDir(mediaFile.path, filename, completePath )
+                    var pathname = path.join('/farm',res.locals.farmId.toString(),req.originalUrl, media._id.toString())
+                    var uploadfile = await storageService.uploadFileInS3(mediaFile.path, filename, pathname )
                     media.src= path.join(pathname,filename)
-                    var smartContract = await blockchainService.createMediaSmartContract()
-                    media.smartContract = smartContract
+
+
+                    var fileMime = mime.getType(mediaFile.path);
+                    if(fileMime.includes('video'))
+                        media.type='video'
+                    else
+                        media.type='image'
+                    media.muted = true
                     media.save()
+                    media.smartContract ="0x000000XXXXXXXXXXX"
+                    var publishEvent =await options.kafkaService.publishEvent("service.product","create.media",media);
                     medias.push(media)
     
                     
@@ -201,7 +231,7 @@ module.exports = (options) => {
    *                            
    */
 
-  router.post('/step', async (req,res) => {
+  router.post('/step', auth.required, auth.isFarmAdminMedia,async (req,res) => {
     try{
 
         var medias = []
@@ -215,12 +245,31 @@ module.exports = (options) => {
         var stepId = req.body.step
         
         var geolocal = JSON.parse(req.body.geolocal)
+
+        var geolocalOptions = {
+            provider: 'google',
+          
+            // Optional depending on the providers
+            httpAdapter: 'https', // Default
+            apiKey: googleApiSettings.mapsApiKey, // for Mapquest, OpenCage, Google Premier
+            formatter: null         // 'gpx', 'string', ...
+          };
+
+  
+        var geocoder = NodeGeocoder(geolocalOptions);
+        var mapsAddress
+        await geocoder.reverse({lat: geolocal.coords.latitude, lon: geolocal.coords.longitude}, function(err, res) {
+            err ? console.log(err) : mapsAddress= res[0].formattedAddress
+          });
+
+
         var loadMedia = mediaFiles.map( async (mediaFile)=> {
             const mediaData = {
                 timestamp: geolocal.timestamp,
                 location: {
                     longitude: geolocal.coords.longitude,
-                    latitude: geolocal.coords.latitude
+                    latitude: geolocal.coords.latitude,
+                    address: mapsAddress
                 }
             }
 
@@ -231,12 +280,21 @@ module.exports = (options) => {
                 
                 var filename = Date.now()+ '-' + mediaFile.originalFilename
                 filename = filename.replace('mp4','MP4')
-                var pathname = path.join(req.originalUrl, media._id.toString())
-                var completePath = path.join(storagePath,pathname)
-                var uploadfile = await storageService.saveToDir(mediaFile.path, filename, completePath )
+                var pathname = path.join('/farm',res.locals.farmId.toString(),req.originalUrl, media._id.toString())
+                var uploadfile = await storageService.uploadFileInS3(mediaFile.path, filename, pathname )
                 media.src= path.join(pathname,filename)
-                var smartContract = await blockchainService.createMediaSmartContract()
-                media.smartContract = smartContract
+
+                var fileMime = mime.getType(mediaFile.path);
+                if(fileMime.includes('video'))
+                    media.type='video'
+                else
+                    media.type='image'
+
+                media.muted = true    
+
+                media.smartContract ="0x000000XXXXXXXXXXX"
+                var publishEvent =await options.kafkaService.publishEvent("service.product","create.media",media);
+
                 media.save()
                 medias.push(media)
 
@@ -308,7 +366,7 @@ module.exports = (options) => {
         try{
             var media = await repo.getMedia(req.params.mediaId) 
             if(media){
-                var mediaBase64 = await storageService.fileToBase64(path.join(storagePath,media.src))
+                var mediaBase64 = await storageService.fileToBase64(media.src)
                 res.status(status.OK).json(mediaBase64)
             }else
                 res.status(404).json({msg: 'media not found'})

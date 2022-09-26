@@ -17,16 +17,22 @@ mediator.on('db.ready', async (db) => {
     var blockhainService = await services.blockchainService.start({
         host: config.bcServiceSettings.host,
         port: config.bcServiceSettings.port
-    })
+    }) 
 
+    
     var storageService = await services.storageService.start({
-        path: config.uploadServiceSettings.path
+        awsSettings: config.awsSettings
     })
 
+    var kafkaService = await services.kafkaService.start({
+        kafkaSettings: config.kafkaSettings,
+        repo: repo,
+    })
     var advService = await services.advService.start({
-        storagePath: config.uploadServiceSettings.path
+        storagePath: config.uploadServiceSettings.path,
+        awsSettings: config.awsSettings
     })
-
+ 
     var auth = await config.authConfig.start({
         secret: config.authSettings.JWTSecret,
         repo: repo
@@ -39,10 +45,13 @@ mediator.on('db.ready', async (db) => {
         blockchainService: blockhainService,
         storagePath: config.uploadServiceSettings.path,
         storageService: storageService,
+        kafkaService: kafkaService,
         advService: advService,
         constants: config.constants,
         auth: auth,
-        swaggerOptions: config.swaggerOptions
+        swaggerOptions: config.swaggerOptions,
+        kafkaSettings: config.kafkaSettings,
+        googleApiSettings: config.googleApiSettings
 
     })
 

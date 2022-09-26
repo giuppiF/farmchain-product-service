@@ -17,17 +17,26 @@ const authentication = (options) => {
   var  isFarmAdmin = async (req,res,next) => {
     var currentProduct = await repo.getProduct(req.params.productID)
     var farmId = req.user.farm
-    console.log(currentProduct)
-    console.log(req.user)
+    res.locals.farmId = farmId
     farmId == currentProduct.farm._id?
       next()
     :
       res.status(401).send()
 
   }
+  var  isFarmAdminMedia = async (req,res,next) => {
+   
+    var farmId = req.user.farm
+    res.locals.farmId = farmId
+    farmId ?
+      next()
+    :
+      res.status(401).send()
 
+  }
   var isFarmAdminForCreation = (req,res,next) => {
     var farmId = req.user.farm
+    res.locals.farmId = farmId
     farmId == req.body.farm._id || farmId == req.body.farm ?
       next()
     :
@@ -48,6 +57,7 @@ const authentication = (options) => {
       credentialsRequired: false,
     }),
     isFarmAdmin,
+    isFarmAdminMedia,
     isFarmAdminForCreation
   };
 

@@ -61,7 +61,18 @@ const repository = () => {
     }
   }*/
 
-  const updateLot= async (productId, lotId, lotData) => {
+  const updateLot= async ( lotId, lotData) => {
+    try {
+      let product = await Product.updateMany(
+        {"lots._id" : lotId}, 
+        { "lots.$" : lotData })
+
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+  const updateProductLot= async (productId, lotId, lotData) => {
     try {
       let product = await Product.findOneAndUpdate(
         {_id: productId, "lots._id" : lotId}, 
@@ -74,7 +85,17 @@ const repository = () => {
     }
   }
 
-  const deleteLot = async (productId, lotId) => {
+  const deleteLot = async ( lotId) => {
+    try{
+      let product = await Product.updateMany(
+        {"lots._id" : lotId},
+        {$pull: {lots: {_id: lotId }}})
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+  const deleteProductLot = async (productId, lotId) => {
     try{
       let product = await Product.findOneAndUpdate(
         {_id: productId, "lots._id" : lotId},
@@ -86,16 +107,18 @@ const repository = () => {
     }
   }
 
-  /*const updateDealers = async (id, productBody) => {
-    try{
-      let product = await Product.findByIdAndUpdate(id,productBody,{new: true,runValidators: true})
+  const updateDealer= async ( dealerId, dealerData) => {
+    try {
+      let product = await Product.updateMany(
+        { "dealers._id" : dealerId}, 
+        { "dealers.$" : dealerData })
+
       return product
-    } catch (error) {
+    } catch (error){
       throw Error(error)
     }
-  }*/
-
-  const updateDealer= async (productId, dealerId, dealerData) => {
+  }
+  const updateProductDealer= async (productId, dealerId, dealerData) => {
     try {
       let product = await Product.findOneAndUpdate(
         {_id: productId, "dealers._id" : dealerId}, 
@@ -108,7 +131,17 @@ const repository = () => {
     }
   }
 
-  const deleteDealer = async (productId, dealerId) => {
+  const deleteDealer = async (dealerId) => {
+    try{
+      let product = await Product.updateMany(
+        { "dealers._id" : dealerId},
+        {$pull: {dealers: {_id: dealerId }}})
+      return product
+    } catch (error){
+      throw Error(error)
+    }
+  }
+  const deleteProductDealer = async (productId, dealerId) => {
     try{
       let product = await Product.findOneAndUpdate(
         {_id: productId, "dealers._id" : dealerId},
@@ -206,14 +239,39 @@ const repository = () => {
     }
   }
 
-  /*const updateProductMedia = async (productId, productBody) => {
-    try{
-      let product = await Product.findByIdAndUpdate(productId,productBody,{new: true,runValidators: true})
+  const updateProductMedia = async ( mediaId, mediaData) => {
+    try {
+      let product = await Product.updateMany(
+        {"media._id" : mediaId}, 
+        { "media.$" : mediaData })
+
       return product
-    } catch (error) {
+    } catch (error){
       throw Error(error)
     }
-  }*/
+  }
+  const updateProductStepMedia = async ( mediaId, mediaData) => {
+    try {
+      let products = await Product.find({"steps.media._id":mediaId}).then((docs) =>{
+        docs.forEach(function(doc,err){
+          doc.steps.map(function(step,err){step.media.map(
+              function(media,err){
+                  if(media._id.toString()==mediaId){
+                    media.smartContract = mediaData.smartContract
+                  }
+              })
+              
+          })
+          doc.save()
+        })
+      })
+
+      return true
+    } catch (error){
+      throw Error(error)
+    }
+  }
+
 
   const addStep = async (productId, step) => {
     try{
@@ -353,9 +411,13 @@ const repository = () => {
     updateProduct,
     deleteProduct,    
     updateLot,
+    updateProductLot,
     deleteLot,
+    deleteProductLot,
     updateDealer,
+    updateProductDealer,
     deleteDealer,
+    deleteProductDealer,
     getProductTypes,
     getProductType,
     createProductType,
@@ -365,6 +427,8 @@ const repository = () => {
     updateMedia,
     getMedia,
     addMediasToProduct,
+    updateProductMedia,
+    updateProductStepMedia,
     addStep,
     getStep,
     updateStep,

@@ -81,10 +81,9 @@ module.exports = (options) => {
             if(req.files.image){
                 var image = req.files.image
     
-                var filename = Date.now()+ '-' + image.originalFilename
+                var filename = productType.name + '-' + image.originalFilename
                 var pathname = req.originalUrl
-                var completePath = path.join(storagePath,pathname)
-                var uploadfile = await storageService.saveToDir(image.path, filename, completePath )
+                var uploadfile = await storageService.uploadFileInS3(image.path, filename, pathname )
                 productType.image = path.join(pathname,filename)
                 productType.save()
 
@@ -152,17 +151,17 @@ module.exports = (options) => {
             if(req.files.image){
                 
                 var pathname = path.join('product','types')
-                var completePathname = path.join(storagePath, pathname)
+
                 var productType = await repo.getProductType(req.params.productTypeID)
                 if(productType.image){
                     var filename = path.join(pathname,productType.image)
-                    var deleteFile = await storageService.deleteFile(filename,storagePath)            
+                    var deleteFile = await storageService.deleteFileFromS3(filename)            
                 }
 
                 var image = req.files.image    
-                var filename = Date.now()+ '-' + image.originalFilename
+                var filename = productType.name + '-' + image.originalFilename
                 
-                var uploadfile = await storageService.saveToDir(image.path, filename, completePathname )
+                var uploadfile = await storageService.uploadFileInS3(image.path, filename, pathname )
                 productTypeData.image = path.join(pathname,filename)
 
                 

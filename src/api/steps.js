@@ -127,6 +127,7 @@ module.exports = (options) => {
             res.status(200).send({'msg': 'no steps'})
 
         }else{
+            console.log("sei entrato in put con : " + req.body)
             const stepsData = {
                 steps: req.body
             }
@@ -338,8 +339,10 @@ module.exports = (options) => {
    */
     router.delete('/:productID/step/:stepID', auth.required, auth.isFarmAdmin, async (req,res) => {
         try{
+            console.log("Cancello step")
             var step = await repo.getStep(req.params.productID,req.params.stepID)
             var product = await repo.deleteStep(req.params.productID,req.params.stepID)
+            console.log("prodotto aggiornato steps: " + product.steps)
             if(step.status == constants.step.status.current){
                 var firstStep = product.steps.find((step) => {return step.status === constants.step.status.next})
 
@@ -347,7 +350,7 @@ module.exports = (options) => {
                     product = await repo.updateStatusStep(req.params.productID,firstStep._id,{status: constants.step.status.current})
                 }
             }
-
+            console.log("prodotto aggiornato steps: " + product.steps)
             
             product ?
                 res.status(status.OK).json(product)
